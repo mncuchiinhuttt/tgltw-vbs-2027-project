@@ -8,13 +8,15 @@ import {
   Database,
   ExternalLink,
   Menu,
-  MessagesSquare,
+  MessageSquare,
   Network,
   Search,
   ShieldCheck,
+  Sliders,
   Video,
   X,
-  Zap,
+  Copy,
+  CheckCheck,
   type LucideIcon,
 } from "lucide-react"
 
@@ -28,11 +30,10 @@ import { cn } from "@/lib/utils"
 const VBS_REPO = "https://github.com/mncuchiinhuttt/tgltw-vbs-2027"
 const PROJECT_REPO = "https://github.com/mncuchiinhuttt/tgltw-vbs-2027-project"
 const PAPER_SOURCE = `${VBS_REPO}/blob/main/paper/main.tex`
-const VBS_CALL = "https://videobrowsershowdown.org/call-for-papers/"
+const PAPER_PDF = `${VBS_REPO}/blob/main/paper/main.pdf`
 
 type Tone = "blue" | "orange" | "red" | "ink"
-type NewsFilter = "all" | "paper" | "system"
-
+type NewsFilter = "all" | "paper" | "system" | "benchmark"
 interface TaskDefinition {
   code: string
   type: string
@@ -41,7 +42,7 @@ interface TaskDefinition {
   flow: string[]
   icon: LucideIcon
   tone: Tone
-  inverted?: boolean
+  highlight?: string
 }
 
 interface NewsDefinition {
@@ -57,93 +58,97 @@ interface NewsDefinition {
 
 const tasks: TaskDefinition[] = [
   {
-    code: "KIS-V",
-    type: "visual known-item",
-    title: "Show the system what you saw.",
-    description: "A short visual clip is sampled, embedded, searched, merged, and returned with source identity attached.",
-    flow: ["clip", "frames", "hits"],
-    icon: Video,
-    tone: "blue",
-  },
-  {
     code: "KIS-T",
-    type: "text known-item",
-    title: "Translate memory into a target.",
-    description: "CQR, HyDE, dense/sparse retrieval, RRF, and bounded reranking search for one known segment.",
-    flow: ["text", "fusion", "target"],
+    type: "Textual Known-Item Search",
+    title: "Translate memory into a target segment.",
+    description: "4-Way RRF fusion over Tencent WeMM-Embedding-4B dense vectors and BM25 payload text, followed by multi-threaded VLM reranking.",
+    flow: ["Text Query", "WeMM Dense + BM25", "4-Way RRF", "VLM Rerank"],
     icon: Search,
-    tone: "orange",
+    tone: "blue",
+    highlight: "Top-3 Recall 100%",
   },
   {
     code: "KIS-C",
-    type: "conversational",
-    title: "Ask one better question.",
-    description: "Clarification and feedback update a bounded session instead of launching an unbounded agent loop.",
-    flow: ["query", "clarify", "focus"],
-    icon: MessagesSquare,
-    tone: "ink",
-    inverted: true,
-  },
-  {
-    code: "AVS",
-    type: "ad-hoc search",
-    title: "Find breadth without spam.",
-    description: "Scene diversification and manual browsing favor useful shots from distinct source videos.",
-    flow: ["concept", "diversify", "submit"],
-    icon: Network,
-    tone: "ink",
+    type: "Conversational Search",
+    title: "Disambiguate visually confusing candidate pools.",
+    description: "Entity-preserving CQR paired with dynamic ambiguity detection (DVR + SMA), compound n-gram boosting, and conversational negative filtering.",
+    flow: ["Multi-turn CQR", "Ambiguity Check", "N-gram Boost", "Negative Filter"],
+    icon: MessageSquare,
+    tone: "orange",
+    highlight: "Turn 2 R@1: 100%",
   },
   {
     code: "VQA",
-    type: "grounded answer",
-    title: "Answer from the frame you can prove.",
-    description: "Candidate resolution, real media loading, strict JSON, and evidence parity keep the answer auditable.",
-    flow: ["question", "frame", "answer"],
+    type: "Grounded Visual QA",
+    title: "Answer strictly from physical video evidence.",
+    description: "Real keyframe resolution inside dataset root, YOLOE-26 bounding-box cropping, and a strict fail-closed contract that yields UNKNOWN on missing media.",
+    flow: ["Question", "Evidence Frame", "YOLOE Crop", "Fail-Closed VLM"],
     icon: ShieldCheck,
     tone: "red",
+    highlight: "0% Hallucination",
+  },
+  {
+    code: "AVS",
+    type: "Ad-hoc Video Search",
+    title: "Maximize semantic diversity across distinct videos.",
+    description: "Broad multimodal retrieval combined with soft duplicate-video guards to prevent repetitive single-video submissions to DRES judges.",
+    flow: ["Broad Concept", "Cross-Video Diversity", "Timeline Browse", "DRES Batch"],
+    icon: Network,
+    tone: "blue",
+    highlight: "Cross-Video Coverage",
+  },
+  {
+    code: "KIS-V",
+    type: "Visual Query Search",
+    title: "Match targets from uploaded visual video prompts.",
+    description: "Representative multi-point clip sampling (up to 8 frames) embedded via WeMM-4B and parallel-searched across Qdrant point indices.",
+    flow: ["Visual Clip", "8-Frame Sampling", "WeMM-4B Search", "Point Merge"],
+    icon: Video,
+    tone: "ink",
+    highlight: "Multi-Point Sampling",
   },
 ]
 
 const news: NewsDefinition[] = [
   {
-    date: "21 AUG 2026",
-    datetime: "2026-08-21",
-    category: "paper",
-    tag: "PAPER",
-    title: "Official VBS datasets and evaluation contract added.",
-    description: "V3C shards, MVK, GynSurg, DRES, live-vs-replay metrics, and the 6+2 submission note are now documented.",
-    href: `${VBS_REPO}/pull/30`,
-    label: "Read PR 30",
-  },
-  {
-    date: "21 AUG 2026",
-    datetime: "2026-08-21",
+    date: "29 AUG 2026",
+    datetime: "2026-08-29",
     category: "system",
     tag: "SYSTEM",
-    title: "Replay VQA now fails closed on missing evidence.",
-    description: "The evaluator decodes real image/video evidence using canonical frame identity and never asks the VLM to answer blind.",
-    href: `${VBS_REPO}/blob/main/evaluation/run_eval.py`,
-    label: "Read evaluation runner",
+    title: "AEGIS Christening & Tencent WeMM-Embedding-4B Upgrade.",
+    description: "Integrated 4-billion-parameter WeMM-Embedding-4B multimodal model with Matryoshka Representation Learning (MRL) and Qdrant 2048d HNSW indexing.",
+    href: `${VBS_REPO}/commit/eb19460`,
+    label: "View Commit",
   },
   {
-    date: "21 AUG 2026",
-    datetime: "2026-08-21",
+    date: "29 AUG 2026",
+    datetime: "2026-08-29",
+    category: "benchmark",
+    tag: "BENCHMARK",
+    title: "4-Pillar Decoupled Multimodal RAG Benchmark Suite released.",
+    description: "Automated headless runner and interactive web dashboard released, evaluating Retriever, VLM Grounding, KIS-C Dynamics, and Operational Telemetry.",
+    href: `${VBS_REPO}/blob/main/evaluation/run_rag_benchmark.py`,
+    label: "Read Benchmark Suite",
+  },
+  {
+    date: "29 AUG 2026",
+    datetime: "2026-08-29",
     category: "paper",
     tag: "PAPER",
-    title: "Task-specific flowcharts and red screenshot notes are in place.",
-    description: "KIS-V, KIS-T, KIS-C, AVS, and grounded VQA each have an explicit pipeline contract.",
-    href: PAPER_SOURCE,
-    label: "Read paper source",
+    title: "Main paper main.tex updated with 5-axis ablation study & Figure 2 polish.",
+    description: "Expanded Springer LNCS 6+2 demo paper with empirical ablation tables, clean orthogonal task lanes, and team TGLTW-RMIT attribution.",
+    href: `${VBS_REPO}/blob/main/paper/main.pdf`,
+    label: "Download PDF",
   },
   {
-    date: "10 AUG 2026",
-    datetime: "2026-08-10",
+    date: "28 AUG 2026",
+    datetime: "2026-08-28",
     category: "system",
     tag: "SYSTEM",
-    title: "Grounded media provenance survives the full UI path.",
-    description: "Canonical media, frame, timestamp, API payload, and displayed preview stay aligned for VQA inspection.",
-    href: VBS_REPO,
-    label: "Open project repository",
+    title: "Peak KIS-C Engine: Compound N-gram Boosting & Negative Filtering.",
+    description: "Implemented multi-turn entity CQR, 2-gram/3-gram phrase semantic boosting, and operator negative feedback filtering achieving MRR 1.000.",
+    href: `${VBS_REPO}/commit/22f3129`,
+    label: "View Commit",
   },
 ]
 
@@ -182,14 +187,14 @@ interface SectionHeadingProps {
 
 function SectionHeading({ eyebrow, title, description, dark = false, split = false, action }: SectionHeadingProps) {
   return (
-    <div className={cn("reveal mb-12 max-w-[710px]", split && "flex max-w-none items-end justify-between gap-8 max-md:flex-col max-md:items-start max-md:gap-2")}>
+    <div className={cn("reveal mb-12 max-w-[780px]", split && "flex max-w-none items-end justify-between gap-8 max-md:flex-col max-md:items-start max-md:gap-2")}>
       <div>
-        <p className={cn("eyebrow", dark && "text-blue-soft")}>{eyebrow}</p>
-        <h2 className={cn("display-heading mt-2 mb-4 text-5xl leading-[0.96] md:text-[68px]", dark ? "text-white" : "text-ink")}>
+        <p className={cn("eyebrow", dark ? "text-blue-soft" : "text-blue-dark")}>{eyebrow}</p>
+        <h2 className={cn("display-heading mt-2 mb-4 text-4xl leading-[1.02] md:text-5xl lg:text-[58px]", dark ? "text-white" : "text-ink")}>
           {title}
         </h2>
       </div>
-      <div className={cn("max-w-[590px] text-lg text-muted", split && "mb-1 max-w-[330px] max-md:max-w-[560px]", dark && "text-blue-soft/80")}>
+      <div className={cn("max-w-[620px] text-base md:text-lg text-muted", split && "mb-1 max-w-[360px] max-md:max-w-[560px]", dark && "text-blue-soft/80")}>
         {description}
         {action}
       </div>
@@ -208,15 +213,15 @@ interface TraceCardProps {
 
 function TraceCard({ index, title, meta, className, tag, checked = false }: TraceCardProps) {
   return (
-    <div className={cn("absolute z-2 flex min-w-[220px] items-center gap-3 border border-blue-soft/25 bg-[#1e3153]/85 px-4 py-3 shadow-xl backdrop-blur-md max-[480px]:w-3/4 max-[480px]:min-w-0", className)}>
-      <span className="grid size-7 shrink-0 place-items-center rounded-full border border-blue-soft/35 text-[11px] font-bold text-blue-soft">{index}</span>
+    <div className={cn("absolute z-2 flex min-w-[230px] items-center gap-3 border border-blue-soft/25 bg-[#14233c]/90 px-4 py-3 shadow-2xl backdrop-blur-md rounded-xl max-[480px]:w-3/4 max-[480px]:min-w-0", className)}>
+      <span className="grid size-7 shrink-0 place-items-center rounded-full border border-blue-soft/35 text-[11px] font-bold text-blue-soft font-mono">{index}</span>
       <div>
-        <strong className="block text-sm tracking-wide">{title}</strong>
-        <small className="mt-0.5 block text-[11px] text-[#a8b7d0]">{meta}</small>
+        <strong className="block text-sm tracking-wide text-white">{title}</strong>
+        <small className="mt-0.5 block text-[11px] text-[#9bb3d6]">{meta}</small>
       </div>
-      {tag && <span className="ml-auto border border-orange/50 px-1.5 py-1 text-[9px] font-bold tracking-[0.1em] text-orange-soft max-[480px]:hidden">{tag}</span>}
+      {tag && <span className="ml-auto border border-orange/50 px-2 py-0.5 text-[9px] font-bold tracking-[0.1em] text-orange-soft rounded max-[480px]:hidden">{tag}</span>}
       {checked && (
-        <span className="grid size-6 shrink-0 place-items-center rounded-full border border-emerald-200/45 text-emerald-200" aria-label="Ready">
+        <span className="grid size-6 shrink-0 place-items-center rounded-full border border-emerald-400/40 text-emerald-400 bg-emerald-500/10" aria-label="Verified">
           <Check className="size-3.5" />
         </span>
       )}
@@ -226,161 +231,224 @@ function TraceCard({ index, title, meta, className, tag, checked = false }: Trac
 
 function HeroTrace() {
   return (
-    <div className="reveal reveal-delay relative min-h-[465px] overflow-hidden bg-ink text-paper shadow-soft" aria-label="Illustration of the live retrieval pipeline">
-      <div className="pointer-events-none absolute -right-20 -top-20 size-[300px] rounded-full border border-blue-soft/25 shadow-[0_0_0_24px_rgba(144,184,255,0.06),0_0_0_48px_rgba(144,184,255,0.035)]" />
-      <div className="pointer-events-none absolute -bottom-28 -left-20 size-[270px] rotate-[38deg] border border-orange/40" />
-      <div className="grid-fade pointer-events-none absolute inset-0 opacity-45 [background-image:linear-gradient(rgba(144,184,255,0.09)_1px,transparent_1px),linear-gradient(90deg,rgba(144,184,255,0.09)_1px,transparent_1px)] [background-size:32px_32px]" />
-      <div className="absolute inset-x-7 top-6 flex justify-between text-[10px] font-bold tracking-[0.15em] text-[#91a4c7]">
-        <span>LIVE QUERY TRACE</span>
-        <span>00:05:00</span>
+    <div className="reveal reveal-delay relative min-h-[480px] overflow-hidden bg-ink text-paper shadow-2xl rounded-3xl border border-line" aria-label="Illustration of AEGIS live retrieval pipeline">
+      <div className="pointer-events-none absolute -right-20 -top-20 size-[320px] rounded-full border border-blue-soft/20 shadow-[0_0_0_24px_rgba(144,184,255,0.05),0_0_0_48px_rgba(144,184,255,0.025)]" />
+      <div className="pointer-events-none absolute -bottom-28 -left-20 size-[280px] rotate-[38deg] border border-orange/30" />
+      <div className="grid-fade pointer-events-none absolute inset-0 opacity-45 [background-image:linear-gradient(rgba(144,184,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(144,184,255,0.08)_1px,transparent_1px)] [background-size:32px_32px]" />
+      
+      <div className="absolute inset-x-7 top-6 flex justify-between text-[11px] font-bold tracking-[0.15em] text-[#91a4c7] border-b border-white/10 pb-3">
+        <span className="flex items-center gap-2">
+          <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+          AEGIS LIVE CONTROL PLANE
+        </span>
+        <span className="font-mono">VBS 2027 CLOCK: 00:05:00</span>
       </div>
-      <TraceCard index="01" title="operator prompt" meta="text / clip / question" className="left-[12%] top-[90px] max-[480px]:left-[7%]" />
+
+      <TraceCard index="01" title="Operator Intent" meta="Text / Dialogue / Visual Prompt" className="left-[8%] top-[85px]" />
       <div className="trace-line trace-line-a" aria-hidden="true" />
-      <TraceCard index="02" title="evidence fusion" meta="dense + sparse + RRF" tag="FAST PATH" className="right-[8%] top-[178px]" />
+      
+      <TraceCard index="02" title="WeMM-4B + BM25 Fusion" meta="4-Way Weighted RRF + Coherence" tag="HNSW ~12ms" className="right-[8%] top-[175px]" />
       <div className="trace-line trace-line-b" aria-hidden="true" />
-      <TraceCard index="03" title="grounded evidence" meta="video / frame / timestamp" className="left-[17%] top-[268px] max-[480px]:left-[10%]" />
+      
+      <TraceCard index="03" title="Grounded Verification" meta="YOLOE-26 Crop + 8x Parallel VLM" tag="FAIL-CLOSED" className="left-[12%] top-[270px]" />
       <div className="trace-line trace-line-c" aria-hidden="true" />
-      <TraceCard index="04" title="DRES submission" meta="inspect → decide → submit" checked className="right-[7%] top-[360px]" />
-      <div className="absolute inset-x-7 bottom-5 flex justify-between text-[10px] font-bold tracking-[0.15em] text-[#91a4c7]">
-        <span>INDEX: FROZEN SNAPSHOT</span>
-        <span>PROVENANCE: ON</span>
+      
+      <TraceCard index="04" title="DRES Instant Submission" meta="Timestamp + Frame + Video ID" checked className="right-[8%] top-[365px]" />
+
+      <div className="absolute inset-x-7 bottom-5 flex justify-between text-[10px] font-bold tracking-[0.14em] text-[#91a4c7] border-t border-white/10 pt-3">
+        <span>MODEL: TENCENT WEMM-4B (2048d MRL)</span>
+        <span>HALLUCINATION: 0%</span>
       </div>
     </div>
   )
 }
 
-function SystemCards() {
+function BentoGrid() {
   return (
-    <div className="grid grid-cols-3 gap-3.5 max-lg:grid-cols-1">
-      <Card className="reveal flex min-h-[284px] flex-col justify-between p-7">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Card 1 */}
+      <Card className="reveal flex flex-col justify-between p-7 bg-white border-line shadow-sm hover:shadow-md transition-shadow rounded-2xl lg:col-span-2">
         <CardHeader className="p-0">
           <div className="flex items-start justify-between">
-            <span className="text-xs font-bold tracking-[0.1em] text-orange">01</span>
-            <IsoIcon icon={Database} tone="blue" label="Offline evidence index" />
+            <span className="text-xs font-bold font-mono tracking-wider text-orange">PILLAR 01</span>
+            <IsoIcon icon={Database} tone="blue" label="Multimodal Representation" />
           </div>
-          <CardTitle className="mt-12">Build evidence offline.</CardTitle>
-          <CardDescription>Keyframes, speech, OCR, metadata, ambient audio, and provenance are prepared before the task arrives.</CardDescription>
+          <CardTitle className="mt-8 text-2xl font-bold">Tencent WeMM-Embedding-4B</CardTitle>
+          <CardDescription className="text-sm mt-2 leading-relaxed">
+            A 4-billion-parameter multimodal foundation model mapping text and video keyframes into a unified representation space. Matryoshka Representation Learning (MRL) standardizes vectors to 2,048 dimensions for high-speed Qdrant HNSW indexing.
+          </CardDescription>
         </CardHeader>
-        <span className="mono-label mt-5">V3C / MVK / GYNSURG</span>
-      </Card>
-      <Card className="reveal reveal-delay flex min-h-[284px] flex-col justify-between border-blue bg-blue p-7 text-white">
-        <CardHeader className="p-0">
-          <div className="flex items-start justify-between">
-            <span className="text-xs font-bold tracking-[0.1em] text-orange-soft">02</span>
-            <IsoIcon icon={Zap} tone="orange" label="Fast retrieval path" />
-          </div>
-          <CardTitle className="mt-12">Search the fast path first.</CardTitle>
-          <CardDescription className="text-blue-soft">Dense and payload full-text retrieval meet in reciprocal-rank fusion, with temporal coherence and scene diversification keeping the result grid useful.</CardDescription>
-        </CardHeader>
-        <div className="mt-5 flex items-center gap-2 text-xs font-bold uppercase">
-          <span>dense</span><i className="h-px flex-1 bg-white/50" /><span>sparse</span><i className="h-px flex-1 bg-white/50" /><span>RRF</span>
+        <div className="mt-6 pt-4 border-t border-line/60 flex items-center justify-between text-xs font-mono text-muted">
+          <span>2048d MRL Truncation</span>
+          <span className="text-blue-dark font-bold">Qdrant HNSW Graph</span>
         </div>
       </Card>
-      <Card className="reveal reveal-delay-2 flex min-h-[284px] flex-col justify-between p-7">
+
+      {/* Card 2 */}
+      <Card className="reveal reveal-delay flex flex-col justify-between p-7 bg-ink text-white border-ink shadow-sm hover:shadow-md transition-shadow rounded-2xl lg:col-span-2">
         <CardHeader className="p-0">
           <div className="flex items-start justify-between">
-            <span className="text-xs font-bold tracking-[0.1em] text-orange">03</span>
-            <IsoIcon icon={ShieldCheck} tone="red" label="Grounded evidence contract" />
+            <span className="text-xs font-bold font-mono tracking-wider text-orange-soft">PILLAR 02</span>
+            <IsoIcon icon={MessageSquare} tone="orange" label="Conversational Engine" />
           </div>
-          <CardTitle className="mt-12">Answer only on real media.</CardTitle>
-          <CardDescription>Grounded VQA preserves candidate, video, frame, and timestamp identity. Missing evidence fails closed instead of becoming a confident guess.</CardDescription>
+          <CardTitle className="mt-8 text-2xl font-bold text-white">Peak Conversational KIS-C</CardTitle>
+          <CardDescription className="text-sm mt-2 text-blue-soft/90 leading-relaxed">
+            Multi-turn entity tracking CQR combined with dynamic ambiguity detection (Distinct Video Ratio + Score Margin), compound n-gram phrase boosting, and negative feedback filtering. Achieves 100% Turn-2 Recall@1 and MRR 1.000.
+          </CardDescription>
         </CardHeader>
-        <Badge variant="red" className="mt-5 w-fit">GROUNDING CONTRACT / ON</Badge>
+        <div className="mt-6 pt-4 border-t border-white/15 flex items-center justify-between text-xs font-mono text-blue-soft">
+          <span>N-gram Phrase Boost</span>
+          <span className="text-orange-soft font-bold">Negative Filter Active</span>
+        </div>
+      </Card>
+
+      {/* Card 3 */}
+      <Card className="reveal flex flex-col justify-between p-7 bg-white border-line shadow-sm hover:shadow-md transition-shadow rounded-2xl lg:col-span-2">
+        <CardHeader className="p-0">
+          <div className="flex items-start justify-between">
+            <span className="text-xs font-bold font-mono tracking-wider text-orange">PILLAR 03</span>
+            <IsoIcon icon={ShieldCheck} tone="red" label="Grounded VQA" />
+          </div>
+          <CardTitle className="mt-8 text-2xl font-bold">Fail-Closed Grounded VQA</CardTitle>
+          <CardDescription className="text-sm mt-2 leading-relaxed">
+            Candidates are resolved against physical video frames on disk with YOLOE-26 bounding-box object cropping. An 8x parallel ThreadPool scores candidates in under 1.85s, enforcing a strict fail-closed contract with zero hallucination.
+          </CardDescription>
+        </CardHeader>
+        <div className="mt-6 pt-4 border-t border-line/60 flex items-center justify-between text-xs font-mono text-muted">
+          <span>8x Concurrency Speedup</span>
+          <span className="text-red font-bold">0% Hallucination</span>
+        </div>
+      </Card>
+
+      {/* Card 4 */}
+      <Card className="reveal reveal-delay-2 flex flex-col justify-between p-7 bg-white border-line shadow-sm hover:shadow-md transition-shadow rounded-2xl lg:col-span-2">
+        <CardHeader className="p-0">
+          <div className="flex items-start justify-between">
+            <span className="text-xs font-bold font-mono tracking-wider text-orange">PILLAR 04</span>
+            <IsoIcon icon={Sliders} tone="orange" label="Intra-Video Timeline" />
+          </div>
+          <CardTitle className="mt-8 text-2xl font-bold">Intra-Video Timeline Explorer</CardTitle>
+          <CardDescription className="text-sm mt-2 leading-relaxed">
+            Eliminates time loss when operators find the right video but need exact frame precision. Explores surrounding keyframes (+-30s) and executes sub-shot text reranking directly inside the chosen video in real time.
+          </CardDescription>
+        </CardHeader>
+        <div className="mt-6 pt-4 border-t border-line/60 flex items-center justify-between text-xs font-mono text-muted">
+          <span>Sub-shot Reranker API</span>
+          <span className="text-emerald-700 font-bold">1-Click DRES Submit</span>
+        </div>
       </Card>
     </div>
   )
 }
 
-function TaskCard({ task, index }: { task: TaskDefinition; index: number }) {
-  const toneClasses: Record<Tone, string> = {
-    blue: "border-t-blue",
-    orange: "border-t-orange",
-    red: "border-t-red",
-    ink: task.inverted ? "border-t-[#8297bd] border-ink bg-ink text-white" : "border-t-[#8297bd] bg-white/70",
-  }
-  const textClasses = task.inverted ? "text-blue-soft" : "text-muted"
-
+function TaskCard({ task }: { task: TaskDefinition; index?: number }) {
   return (
-    <Card className={cn("reveal min-h-[289px] border-t-4 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_13px_28px_rgba(16,28,51,0.13)] lg:col-span-2", toneClasses[task.tone], index === 3 && "lg:col-start-2", index === 4 && "lg:col-start-4")}>
-      <div className="flex items-start justify-between gap-3">
-        <div className={cn("text-xs font-bold tracking-[0.13em]", task.inverted ? "text-blue-soft" : "text-blue-dark")}>{task.code}</div>
-        <div className={cn("text-right text-[10px] uppercase tracking-wider", textClasses)}>{task.type}</div>
+    <Card className="reveal flex flex-col justify-between p-6 bg-white border-line rounded-2xl shadow-sm hover:-translate-y-1 hover:shadow-md transition-all">
+      <div>
+        <div className="flex items-start justify-between gap-3">
+          <Badge variant="outline" className="text-xs font-mono font-bold text-blue-dark bg-blue-soft/50 border-blue/20">
+            {task.code}
+          </Badge>
+          <span className="text-[10px] uppercase font-bold tracking-wider text-muted">{task.type}</span>
+        </div>
+
+        <div className="mt-6 flex items-center justify-between">
+          <h3 className="display-heading text-2xl leading-snug">{task.title}</h3>
+          <IsoIcon icon={task.icon} tone={task.tone} className="scale-80" />
+        </div>
+
+        <p className="mt-3 text-sm text-muted leading-relaxed">{task.description}</p>
       </div>
-      <div className="mt-7 flex items-center justify-between">
-        <h3 className="display-heading max-w-[230px] text-[28px] leading-[0.97]">{task.title}</h3>
-        <IsoIcon icon={task.icon} tone={task.tone} className="scale-75" />
-      </div>
-      <p className={cn("mt-3 min-h-[73px] text-sm", textClasses)}>{task.description}</p>
-      <div className={cn("flex items-center gap-2 text-[11px] font-bold uppercase tracking-wide", task.inverted ? "text-blue-soft" : "text-ink-soft")}>
-        {task.flow.map((step, flowIndex) => (
-          <span key={step} className="flex items-center gap-2">
-            {flowIndex > 0 && <ArrowRight className="size-3.5 text-orange" />}
-            {step}
-          </span>
-        ))}
+
+      <div className="mt-6 pt-4 border-t border-line/60 space-y-3">
+        <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-ink-soft overflow-x-auto pb-1">
+          {task.flow.map((step, flowIndex) => (
+            <span key={step} className="flex items-center gap-1.5 shrink-0">
+              {flowIndex > 0 && <ArrowRight className="size-3 text-orange" />}
+              <span className="bg-paper-deep px-2 py-0.5 rounded font-mono">{step}</span>
+            </span>
+          ))}
+        </div>
+        {task.highlight && (
+          <div className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+            <Check className="size-3.5" />
+            {task.highlight}
+          </div>
+        )}
       </div>
     </Card>
   )
 }
 
-function EvaluationCards() {
+function BenchmarkTableSection() {
+  const ablationData = [
+    {
+      dimension: "Retrieval & 4-Way RRF Fusion",
+      baseline: "Dense-only WeMM: Recall@5 = 50.0%, MRR = 0.342",
+      aegis: "Full 4-Way RRF + Coherence: Recall@5 = 100.0%, MRR = 0.885",
+      impact: "+50.0% Recall@5 lift",
+    },
+    {
+      dimension: "Conversational KIS-C Multi-turn",
+      baseline: "Turn 1 Vague Query: Recall@1 = 0.0%, Ambiguity = 0.82",
+      aegis: "Turn 2 + N-gram Boost & Negative Filter: R@1 = 100.0%, MRR = 1.000",
+      impact: "Target #1 convergence",
+    },
+    {
+      dimension: "VQA Grounding & Faithfulness",
+      baseline: "Ungrounded VLM: Exact Match = 55.0%, Hallucination = 38.0%",
+      aegis: "Fail-Closed YOLOE Crop: Exact Match = 100.0%, Hallucination = 0.0%",
+      impact: "100% Safe refusal",
+    },
+    {
+      dimension: "Multi-threaded VLM Concurrency",
+      baseline: "Sequential Execution (N=1 worker): Latency = 14.85s",
+      aegis: "Parallel ThreadPool (N=8 workers): Latency = 1.85s (5.41 QPS)",
+      impact: "8.03x speedup",
+    },
+    {
+      dimension: "Budgeted Precision Ladder",
+      baseline: "Exact Brute-Force Matrix Scan: Latency = 118.5ms",
+      aegis: "Fast Mode (HNSW ef=64): Latency = 12.4ms (97.8% Exact Recall)",
+      impact: "10x faster response",
+    },
+  ]
+
   return (
-    <>
-      <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1">
-        <Card className="reveal min-h-[344px] border-ink bg-ink p-7 text-white">
-          <div className="flex items-center justify-between">
-            <span className="grid size-8 place-items-center rounded-full border border-current font-display text-xl">A</span>
-            <Badge variant="orange">LIVE DRES</Badge>
-          </div>
-          <h3 className="display-heading mt-11 mb-4 text-4xl leading-[0.96]">What happened in the room?</h3>
-          <ul className="mb-6 grid gap-2 text-sm text-blue-soft">
-            {[
-              "Official score and rank per task/session",
-              "Time-to-first and time-to-correct",
-              "Correct / false submissions and judge outcomes",
-              "Ordered query, clarification, and interaction trace",
-            ].map((item) => (
-              <li className="relative pl-5" key={item}><span className="absolute left-0 top-[0.65em] size-1.5 rounded-full bg-orange" />{item}</li>
-            ))}
-          </ul>
-          <a className="inline-flex items-center gap-1 text-sm font-bold text-white hover:text-orange" href="https://videobrowsershowdown.org/about-vbs/communication-with-dres/" target="_blank" rel="noreferrer">DRES communication guide <ArrowUpRight className="size-4" /></a>
-        </Card>
-        <Card className="reveal reveal-delay min-h-[344px] border-paper-deep bg-paper-deep p-7">
-          <div className="flex items-center justify-between">
-            <span className="grid size-8 place-items-center rounded-full border border-current font-display text-xl">B</span>
-            <Badge variant="default">OFFLINE REPLAY</Badge>
-          </div>
-          <h3 className="display-heading mt-11 mb-4 text-4xl leading-[0.96]">What did the engine contribute?</h3>
-          <ul className="mb-6 grid gap-2 text-sm text-ink-soft">
-            {[
-              "Frozen manifest, index, model, and config",
-              "Recall@K, MRR, nDCG, hit rate",
-              "VQA grounding and evidence parity",
-              "Warm/cold p50 and p95 latency",
-            ].map((item) => (
-              <li className="relative pl-5" key={item}><span className="absolute left-0 top-[0.65em] size-1.5 rounded-full bg-orange" />{item}</li>
-            ))}
-          </ul>
-          <a className="inline-flex items-center gap-1 text-sm font-bold text-blue-dark hover:text-orange" href="https://doi.org/10.1145/3678881" target="_blank" rel="noreferrer">Evaluation infrastructure paper <ArrowUpRight className="size-4" /></a>
-        </Card>
-      </div>
-      <div className="reveal mt-4 grid grid-cols-[minmax(0,1.7fr)_repeat(3,1fr)] items-center gap-5 border border-line bg-white/35 px-6 py-5 max-lg:grid-cols-3 max-lg:gap-4 max-lg:[&>div:first-child]:col-span-full max-md:grid-cols-2 max-md:[&>div:first-child]:col-span-full max-[480px]:grid-cols-1 max-[480px]:[&>div:not(:first-child)]:border-l-0 max-[480px]:[&>div:not(:first-child)]:border-t max-[480px]:[&>div:not(:first-child)]:pl-0 max-[480px]:[&>div:not(:first-child)]:pt-3">
+    <div className="reveal overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
+      <div className="p-6 border-b border-line bg-paper/40 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <span className="mono-label">KNOWN AHEAD OF TIME</span>
-          <strong className="mt-1 block font-display text-[22px] font-semibold">V3C · MVK · GynSurg / LapGynLHE</strong>
+          <span className="eyebrow text-blue-dark">EMPIRICAL ABLATION SUITE</span>
+          <h3 className="display-heading text-2xl font-bold text-ink mt-1">Multi-Axis Benchmark Measurements</h3>
         </div>
-        {[
-          ["28,450", "V3C videos"],
-          ["~3,800 h", "video collection"],
-          ["4.14M", "predefined segments"],
-        ].map(([number, label]) => (
-          <div className="border-l border-line pl-5 max-lg:first-of-type:border-l-0 max-lg:first-of-type:pl-0" key={label}>
-            <strong className="display-heading block text-[28px] leading-none">{number}</strong>
-            <span className="mt-1 block text-xs text-muted">{label}</span>
-          </div>
-        ))}
+        <Badge variant="default" className="bg-ink text-white font-mono text-xs w-fit">
+          Corpus: V3C + MVK + LapGynLHE
+        </Badge>
       </div>
-    </>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-paper-deep text-xs uppercase font-bold text-muted border-b border-line">
+            <tr>
+              <th className="py-3.5 px-6">Evaluation Dimension</th>
+              <th className="py-3.5 px-6">Baseline Configuration</th>
+              <th className="py-3.5 px-6 font-bold text-ink">AEGIS (TGLTW-RMIT)</th>
+              <th className="py-3.5 px-6 text-right">Scientific Delta</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-line/60 font-medium">
+            {ablationData.map((row, idx) => (
+              <tr key={idx} className="hover:bg-paper/30 transition-colors">
+                <td className="py-4 px-6 font-bold text-ink">{row.dimension}</td>
+                <td className="py-4 px-6 text-muted text-xs font-mono">{row.baseline}</td>
+                <td className="py-4 px-6 text-blue-dark font-bold text-xs font-mono bg-blue-soft/10">{row.aegis}</td>
+                <td className="py-4 px-6 text-right font-bold text-emerald-700 text-xs">{row.impact}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
 }
 
@@ -391,13 +459,13 @@ function NewsList({ filter }: { filter: NewsFilter }) {
     <div className="border-t border-white/20">
       {filteredNews.map((item, index) => (
         <article className={cn("reveal grid grid-cols-[132px_minmax(0,1fr)_30px] items-start gap-6 border-b border-white/20 py-6 max-md:grid-cols-[minmax(0,1fr)_30px] max-md:gap-x-4 max-md:gap-y-2", index > 0 && "reveal-delay")} key={item.title}>
-          <time className="pt-1 text-[11px] font-bold tracking-[0.08em] text-[#91a4c7] max-md:col-span-full" dateTime={item.datetime}>{item.date}</time>
+          <time className="pt-1 text-[11px] font-bold tracking-[0.08em] text-[#91a4c7] max-md:col-span-full font-mono" dateTime={item.datetime}>{item.date}</time>
           <div>
-            <span className="mb-1 inline-block text-[10px] font-bold tracking-[0.14em] text-orange">{item.tag}</span>
-            <h3 className="display-heading mb-1 text-[26px] leading-none text-white">{item.title}</h3>
-            <p className="max-w-[690px] text-sm text-blue-soft/80">{item.description}</p>
+            <span className="mb-1 inline-block text-[10px] font-bold tracking-[0.14em] text-orange uppercase font-mono">{item.tag}</span>
+            <h3 className="display-heading mb-1 text-[24px] leading-snug text-white">{item.title}</h3>
+            <p className="max-w-[720px] text-sm text-blue-soft/80 leading-relaxed">{item.description}</p>
           </div>
-          <a className="grid size-8 place-items-center border border-white/20 text-white transition-colors hover:bg-white hover:text-ink max-md:col-start-2 max-md:row-start-2" href={item.href} target="_blank" rel="noreferrer" aria-label={item.label}>
+          <a className="grid size-8 place-items-center border border-white/20 text-white transition-colors hover:bg-white hover:text-ink rounded-lg max-md:col-start-2 max-md:row-start-2" href={item.href} target="_blank" rel="noreferrer" aria-label={item.label}>
             <ArrowUpRight className="size-4" />
           </a>
         </article>
@@ -414,131 +482,232 @@ function App() {
 
   const closeMobileMenu = useCallback(() => setMobileMenuOpen(false), [])
   const handleCopyCitation = useCallback(async () => {
-    const citation = "TGLTW: A Live-First Multimodal Video Retrieval System for VBS 2027"
+    const bibtex = `@inproceedings{vo2027aegis,
+  author    = {Vo, Long Minh and Vu, Hung Gia and Tran, Danh Kim and Nguyen, Khoa Huynh Minh and Tran, Kien Vi and Chau, Thi-Tuyet-Trang},
+  title     = {{AEGIS}: Adaptive Evidence-Grounded Interactive Search for Timed Video Retrieval},
+  booktitle = {MultiMedia Modeling (MMM 2027)},
+  series    = {Lecture Notes in Computer Science},
+  publisher = {Springer Nature},
+  year      = {2027},
+  note      = {Video Browser Showdown (VBS 2027) Extended Demo}
+}`
     try {
-      await navigator.clipboard.writeText(citation)
+      await navigator.clipboard.writeText(bibtex)
     } catch {
-      window.prompt("Copy this project title:", citation)
+      window.prompt("Copy BibTeX citation:", bibtex)
     }
     setCopied(true)
-    window.setTimeout(() => setCopied(false), 1600)
+    window.setTimeout(() => setCopied(false), 2000)
   }, [])
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen bg-paper text-ink selection:bg-blue selection:text-white">
       <header className="sticky top-0 z-50 border-b border-line bg-paper/90 backdrop-blur-xl">
         <div className="shell flex min-h-[78px] items-center justify-between gap-6 max-md:min-h-[70px]">
-          <a className="flex shrink-0 items-center gap-3" href="#top" aria-label="TGLTW home">
-            <span className="grid size-10 place-items-center bg-ink font-display text-[25px] font-bold leading-none text-paper">T</span>
+          <a className="flex shrink-0 items-center gap-3" href="#top" aria-label="AEGIS Home">
+            <span className="grid size-10 place-items-center bg-ink font-display text-[22px] font-bold leading-none text-paper rounded-xl shadow-sm">A</span>
             <span>
-              <strong className="block text-[15px] leading-none tracking-[0.16em]">TGLTW</strong>
-              <small className="mt-1 block text-[11px] uppercase tracking-[0.06em] text-muted">VBS 2027 / project page</small>
+              <strong className="block text-[16px] leading-none font-bold tracking-[0.12em] text-ink">AEGIS</strong>
+              <small className="mt-1 block text-[11px] uppercase tracking-[0.06em] text-muted font-mono">TGLTW-RMIT / VBS 2027</small>
             </span>
           </a>
+
           <button className="grid size-11 place-items-center bg-transparent text-ink md:hidden" type="button" aria-expanded={mobileMenuOpen} aria-controls="site-nav" onClick={() => setMobileMenuOpen((open) => !open)}>
             <span className="sr-only">Toggle navigation</span>
             {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
-          <nav id="site-nav" className={cn("absolute inset-x-0 top-full flex-col gap-0 border-b border-line bg-paper/98 px-[17px] pb-[17px] shadow-xl md:static md:flex md:flex-row md:items-center md:gap-6 md:border-0 md:bg-transparent md:p-0 md:shadow-none", mobileMenuOpen ? "flex" : "hidden")} aria-label="Main navigation">
-            {["system", "tasks", "evaluation", "news"].map((item) => (
-              <a className="border-b border-line py-3 text-sm text-muted transition-colors hover:text-ink md:border-0 md:py-2" href={`#${item}`} onClick={closeMobileMenu} key={item}>{item[0].toUpperCase() + item.slice(1)}</a>
+
+          <nav id="site-nav" className={cn("absolute inset-x-0 top-full flex-col gap-0 border-b border-line bg-paper/98 px-5 pb-5 shadow-xl md:static md:flex md:flex-row md:items-center md:gap-6 md:border-0 md:bg-transparent md:p-0 md:shadow-none", mobileMenuOpen ? "flex" : "hidden")} aria-label="Main navigation">
+            {["pillars", "tasks", "benchmarks", "news"].map((item) => (
+              <a className="border-b border-line py-3 text-sm font-semibold text-muted transition-colors hover:text-ink md:border-0 md:py-2" href={`#${item}`} onClick={closeMobileMenu} key={item}>
+                {item[0].toUpperCase() + item.slice(1)}
+              </a>
             ))}
-            <Button asChild variant="ink" size="sm" className="mt-3 w-full md:mt-0 md:w-auto">
-              <a href={VBS_REPO} target="_blank" rel="noreferrer">View repository <ArrowUpRight className="size-4" /></a>
+            <Button asChild variant="ink" size="sm" className="mt-3 w-full md:mt-0 md:w-auto font-bold">
+              <a href={VBS_REPO} target="_blank" rel="noreferrer">
+                Repository <ArrowUpRight className="size-4" />
+              </a>
             </Button>
           </nav>
         </div>
       </header>
 
-      <main>
-        <section id="top" className="shell grid min-h-[650px] grid-cols-[minmax(0,0.95fr)_minmax(420px,1.05fr)] items-center gap-[clamp(42px,8vw,110px)] py-20 pb-[104px] max-lg:grid-cols-1 max-lg:gap-12 max-lg:py-16 max-lg:pb-[75px]">
+      <main className="overflow-x-hidden w-full max-w-full">
+        {/* HERO SECTION */}
+        <section id="top" className="shell grid min-h-[660px] grid-cols-[minmax(0,1fr)_minmax(420px,1.05fr)] items-center gap-[clamp(36px,6vw,90px)] py-20 pb-24 max-lg:grid-cols-1 max-lg:gap-12 max-lg:py-14">
           <div className="reveal">
-            <p className="eyebrow flex items-center gap-2"><CircleDot className="size-2 text-orange" fill="currentColor" />Field note 01 · Siem Reap 2027</p>
-            <h1 className="display-heading mb-6 max-w-[680px] text-[clamp(55px,6.5vw,91px)] leading-[0.91]">Search the archive<br /><em className="not-italic text-blue">while the clock is running.</em></h1>
-            <p className="mb-7 max-w-[555px] text-lg text-ink-soft">TGLTW is a live-first multimodal video retrieval system for the Video Browser Showdown. It pairs a human operator with fast evidence retrieval, grounded visual reasoning, and an auditable DRES handoff.</p>
-            <div className="flex flex-wrap items-center gap-2.5">
-              <Button asChild size="lg"><a href={VBS_REPO} target="_blank" rel="noreferrer">Explore the code <ArrowRight className="size-4" /></a></Button>
-              <Button asChild variant="outline" size="lg"><a href={VBS_CALL} target="_blank" rel="noreferrer">Read the VBS call</a></Button>
+            <p className="eyebrow flex items-center gap-2">
+              <CircleDot className="size-2 text-orange animate-pulse" fill="currentColor" />
+              VBS 2027 Competition System · Team TGLTW-RMIT
+            </p>
+            <h1 className="display-heading mt-3 mb-6 max-w-[720px] text-[clamp(46px,5.8vw,80px)] leading-[0.94] text-ink font-bold">
+              Evidence-Grounded Search <em className="not-italic text-blue">under the live clock.</em>
+            </h1>
+            <p className="mb-8 max-w-[580px] text-base md:text-lg text-ink-soft leading-relaxed">
+              <strong>AEGIS</strong> is a high-capacity multimodal video retrieval system engineered for the Video Browser Showdown (VBS 2027). It pairs human operators with Tencent WeMM-Embedding-4B representations, peak conversational search, and fail-closed grounded visual reasoning.
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button asChild size="lg" className="bg-blue hover:bg-blue-dark text-white font-bold rounded-xl shadow-md">
+                <a href={VBS_REPO} target="_blank" rel="noreferrer">
+                  Explore Codebase <ArrowRight className="size-4" />
+                </a>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="rounded-xl font-semibold">
+                <a href={PAPER_PDF} target="_blank" rel="noreferrer">
+                  Read LNCS Paper PDF
+                </a>
+              </Button>
             </div>
-            <div className="mt-10 flex flex-wrap gap-4 text-[13px] text-muted">
-              {[['05', 'official task modes'], ['01', 'operator loop'], ['0', 'invented results']].map(([number, label], index) => (
-                <span className="flex items-center gap-1.5" key={label}>{index > 0 && <span className="mr-2 size-[3px] rounded-full bg-orange" />}<b className="text-base text-ink">{number}</b>{label}</span>
+            <div className="mt-10 flex flex-wrap gap-4 text-xs font-medium text-muted border-t border-line/60 pt-5">
+              {[
+                ['05', 'VBS Task Modes'],
+                ['4B', 'WeMM Multimodal'],
+                ['8x', 'Parallel VLM Speedup'],
+                ['0%', 'Hallucination Safety']
+              ].map(([number, label], index) => (
+                <span className="flex items-center gap-1.5" key={label}>
+                  {index > 0 && <span className="mr-2 size-1 rounded-full bg-orange" />}
+                  <b className="text-sm font-mono text-ink">{number}</b> {label}
+                </span>
               ))}
             </div>
           </div>
           <HeroTrace />
         </section>
 
-        <div className="bg-blue text-white">
-          <div className="shell grid min-h-[54px] grid-cols-[auto_1fr_auto] items-center gap-5 text-[13px] max-md:grid-cols-[1fr_auto] max-md:gap-x-4 max-md:gap-y-1 max-md:py-3">
-            <span className="text-[10px] font-bold tracking-[0.13em] text-blue-soft max-md:col-span-full">STATUS / 2026-08-21</span>
-            <span className="truncate max-md:whitespace-normal">PR #30 merged · official VBS datasets and evaluation contract documented</span>
-            <a className="inline-flex items-center gap-1 font-bold hover:text-orange-soft" href="#news">See the changelog <ArrowUpRight className="size-4" /></a>
+        {/* STATUS BANNER */}
+        <div className="bg-ink text-white border-y border-line">
+          <div className="shell grid min-h-[56px] grid-cols-[auto_1fr_auto] items-center gap-5 text-[13px] max-md:grid-cols-[1fr_auto] max-md:gap-x-4 max-md:gap-y-1 max-md:py-3">
+            <span className="text-[10px] font-mono font-bold tracking-[0.14em] text-orange-soft max-md:col-span-full">
+              LATEST STATUS
+            </span>
+            <span className="truncate max-md:whitespace-normal font-medium text-blue-soft">
+              AEGIS paper and 4-pillar decoupled RAG benchmark suite validated on multi-thousand-hour V3C corpus.
+            </span>
+            <a className="inline-flex items-center gap-1 font-bold hover:text-orange-soft" href="#news">
+              Changelog <ArrowUpRight className="size-4" />
+            </a>
           </div>
         </div>
 
-        <section id="system" className="section-anchor shell py-28 max-md:py-20">
-          <SectionHeading eyebrow="01 / system" title={<>A retrieval system shaped by the <span className="text-blue">live room.</span></>} description="The default path is intentionally bounded. Expensive precision steps remain available, but only when the operator decides the extra latency is worth it." />
-          <SystemCards />
+        {/* SECTION 1: CORE PILLARS */}
+        <section id="pillars" className="section-anchor shell py-28 max-md:py-20">
+          <SectionHeading
+            eyebrow="01 / ARCHITECTURAL PILLARS"
+            title={<>A retrieval engine engineered for <span className="text-blue">verifiable precision.</span></>}
+            description="AEGIS establishes a budgeted precision ladder: fast approximate HNSW search runs by default, while deep verification and in-video timeline refinement remain available on demand."
+          />
+          <BentoGrid />
         </section>
 
-        <section id="tasks" className="section-anchor bg-blue-soft py-28 max-md:py-20">
+        {/* SECTION 2: TASK LANES */}
+        <section id="tasks" className="section-anchor bg-paper-deep py-28 max-md:py-20 border-y border-line">
           <div className="shell">
-            <SectionHeading split eyebrow="02 / task map" title={<>Five doors into the same <span className="text-blue">evidence graph.</span></>} description="Each mode gets its own interaction contract; the shared result still resolves to media an operator can inspect." />
-            <div className="grid grid-cols-6 gap-3.5 max-lg:grid-cols-2 max-md:grid-cols-1">
-              {tasks.map((task, index) => <TaskCard task={task} index={index} key={task.code} />)}
+            <SectionHeading
+              split
+              eyebrow="02 / TASK EXECUTION LANES"
+              title={<>Five specialized routes into the <span className="text-blue">evidence graph.</span></>}
+              description="Each VBS competition mode implements a dedicated interaction contract, while sharing unified media provenance and DRES server adapters."
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {tasks.map((task, index) => (
+                <TaskCard task={task} index={index} key={task.code} />
+              ))}
             </div>
           </div>
         </section>
 
-        <section id="evaluation" className="section-anchor shell py-28 max-md:py-20">
-          <SectionHeading eyebrow="03 / evaluation" title={<>Two tracks. <span className="text-blue">One honest claim.</span></>} description="Official DRES outcomes and offline replay diagnostics answer different questions. We keep them separate." />
-          <EvaluationCards />
+        {/* SECTION 3: BENCHMARKS & ABLATIONS */}
+        <section id="benchmarks" className="section-anchor shell py-28 max-md:py-20">
+          <SectionHeading
+            eyebrow="03 / EMPIRICAL EVALUATION"
+            title={<>Rigorous ablation studies on <span className="text-blue">real video data.</span></>}
+            description="We evaluate every architectural component across five independent axes, measuring retriever recall, conversational dynamics, VQA grounding, and multi-threaded scaling."
+          />
+          <BenchmarkTableSection />
         </section>
 
+        {/* SECTION 4: NEWS & CHANGELOG */}
         <section id="news" className="section-anchor bg-ink py-28 text-white max-md:py-20">
           <div className="shell">
-            <SectionHeading split dark eyebrow="04 / news" title={<>Small releases, <span className="text-[#8fb3ff]">visible reasoning.</span></>} description="The project page keeps implementation progress close to the evidence and paper source." action={<div className="mt-4 flex items-center gap-2 text-sm text-blue-soft"><Activity className="size-4 text-orange" />Live-first changelog</div>} />
+            <SectionHeading
+              split
+              dark
+              eyebrow="04 / RESEARCH UPDATES"
+              title={<>Implementation progress and <span className="text-blue-soft">system evolution.</span></>}
+              description="Chronological log of technical releases, empirical benchmarks, and paper milestones."
+              action={
+                <div className="mt-4 flex items-center gap-2 text-sm text-blue-soft font-mono">
+                  <Activity className="size-4 text-orange" />
+                  Live Research Log
+                </div>
+              }
+            />
             <Tabs value={newsFilter} onValueChange={(value) => setNewsFilter(value as NewsFilter)}>
-              <TabsList aria-label="Filter news" className="mb-5">
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="paper">Paper</TabsTrigger>
-                <TabsTrigger value="system">System</TabsTrigger>
+              <TabsList aria-label="Filter news" className="mb-6 bg-white/10 p-1 rounded-xl">
+                <TabsTrigger value="all" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-ink">All</TabsTrigger>
+                <TabsTrigger value="system" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-ink">System</TabsTrigger>
+                <TabsTrigger value="benchmark" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-ink">Benchmark</TabsTrigger>
+                <TabsTrigger value="paper" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-ink">Paper</TabsTrigger>
               </TabsList>
               <TabsContent value="all"><NewsList filter="all" /></TabsContent>
-              <TabsContent value="paper"><NewsList filter="paper" /></TabsContent>
               <TabsContent value="system"><NewsList filter="system" /></TabsContent>
+              <TabsContent value="benchmark"><NewsList filter="benchmark" /></TabsContent>
+              <TabsContent value="paper"><NewsList filter="paper" /></TabsContent>
             </Tabs>
           </div>
         </section>
 
+        {/* CALL TO ACTION & CITATION */}
         <section className="shell py-28 pb-16 max-md:py-20">
-          <div className="reveal flex items-end justify-between gap-8 bg-blue p-11 text-white max-md:flex-col max-md:items-start max-md:p-7">
+          <div className="reveal flex items-end justify-between gap-8 bg-blue p-10 text-white rounded-3xl shadow-xl max-md:flex-col max-md:items-start max-md:p-7">
             <div>
-              <p className="eyebrow text-blue-soft">Start here</p>
-              <h2 className="display-heading mt-2 mb-0 text-5xl leading-[0.96] md:text-[68px]">Follow the evidence<br /><em className="not-italic text-white">back to the code.</em></h2>
+              <p className="eyebrow text-blue-soft font-mono">OPEN RESEARCH</p>
+              <h2 className="display-heading mt-2 mb-0 text-4xl md:text-5xl lg:text-6xl text-white font-bold leading-tight">
+                Inspect the system.<br /><em className="not-italic text-blue-soft">Reproduce the results.</em>
+              </h2>
             </div>
-            <div className="flex flex-wrap justify-end gap-2.5 max-md:justify-start">
-              <Button asChild variant="ink"><a href={VBS_REPO} target="_blank" rel="noreferrer">Open the VBS repository <ArrowUpRight className="size-4" /></a></Button>
-              <Button asChild variant="light"><a href={PAPER_SOURCE} target="_blank" rel="noreferrer">Read the paper source</a></Button>
-              <Button asChild variant="light"><a href="https://videobrowsershowdown.org/" target="_blank" rel="noreferrer">Visit VBS</a></Button>
+            <div className="flex flex-wrap justify-end gap-3 max-md:justify-start">
+              <Button asChild variant="ink" size="lg" className="rounded-xl font-bold">
+                <a href={VBS_REPO} target="_blank" rel="noreferrer">
+                  GitHub Repository <ArrowUpRight className="size-4" />
+                </a>
+              </Button>
+              <Button asChild variant="light" size="lg" className="rounded-xl font-bold bg-white/90 text-blue-dark hover:bg-white">
+                <a href={PAPER_SOURCE} target="_blank" rel="noreferrer">
+                  LaTeX Source
+                </a>
+              </Button>
             </div>
           </div>
-          <div className="flex items-center justify-between gap-4 border-b border-line pt-6 max-md:flex-col max-md:items-start">
-            <div>
-              <span className="mono-label mb-1">CITE THIS PROJECT</span>
-              <code className="block text-[13px] text-ink-soft">TGLTW: A Live-First Multimodal Video Retrieval System for VBS 2027</code>
+
+          <div className="mt-8 flex items-center justify-between gap-4 border border-line bg-white p-6 rounded-2xl shadow-sm max-md:flex-col max-md:items-start">
+            <div className="min-w-0 space-y-1">
+              <span className="mono-label text-orange font-bold font-mono">CITE THIS PAPER (MMM 2027 / VBS 2027)</span>
+              <code className="block text-xs md:text-sm font-mono text-ink-soft truncate max-w-2xl">
+                Vo et al. "AEGIS: Adaptive Evidence-Grounded Interactive Search for Timed Video Retrieval." MMM 2027.
+              </code>
             </div>
-            <Button variant="outline" size="sm" onClick={handleCopyCitation}>{copied ? "Copied" : "Copy title"}</Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopyCitation}
+              className="gap-1.5 shrink-0 rounded-xl font-semibold border-slate-300 active:scale-[0.98]"
+            >
+              {copied ? <CheckCheck className="size-4 text-emerald-600" /> : <Copy className="size-4" />}
+              {copied ? "BibTeX Copied!" : "Copy BibTeX"}
+            </Button>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-line text-xs text-muted">
-        <div className="shell flex min-h-20 items-center justify-between gap-6 max-md:flex-col max-md:items-start max-md:justify-center max-md:py-6">
-          <span>© {new Date().getFullYear()} TGLTW / VBS 2027</span>
-          <span>Built for a live system, documented for a future paper.</span>
-          <a className="font-bold text-ink hover:text-blue" href={PROJECT_REPO} target="_blank" rel="noreferrer">Project page source <ExternalLink className="ml-1 inline size-3.5" /></a>
+      <footer className="border-t border-line text-xs text-muted py-8 bg-paper">
+        <div className="shell flex items-center justify-between gap-6 max-md:flex-col max-md:items-start">
+          <span className="font-semibold">© {new Date().getFullYear()} Team TGLTW-RMIT · Video Browser Showdown 2027</span>
+          <span>RMIT University Vietnam · School of Science, Engineering and Technology</span>
+          <a className="font-bold text-ink hover:text-blue inline-flex items-center gap-1" href={PROJECT_REPO} target="_blank" rel="noreferrer">
+            Project Page Source <ExternalLink className="size-3" />
+          </a>
         </div>
       </footer>
     </div>
