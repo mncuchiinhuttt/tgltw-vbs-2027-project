@@ -389,7 +389,8 @@
        while presenting only its diagram surface inside a proof card. */
     html[data-embed="true"] body {
       min-height: 0;
-      padding: 0.35rem 0.5rem;
+      padding: 0.25rem 0.5rem 0;
+      margin: 0;
       overflow: hidden;
       background: var(--bg);
       background-image: none;
@@ -399,10 +400,11 @@
     html[data-embed="true"] .cards { display: none !important; }
     html[data-embed="true"] .container { max-width: none; margin: 0; padding: 0; }
     html[data-embed="true"] .guided-views {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.25rem;
     }
     html[data-embed="true"] .diagram-container {
-      padding: 0.25rem;
+      padding: 0;
+      margin: 0;
       border: 0;
       border-radius: 0;
       box-shadow: none;
@@ -411,7 +413,6 @@
       width: 100%;
       min-width: 0;
     }
-
     /* Share Chapter Cue lives in the HTML viewer layer, not inside the SVG.
        It gives one-shot embeds a title, authored note, truthful stop order,
        and lifecycle state while canonical diagram geometry stays untouched. */
