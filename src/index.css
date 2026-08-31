@@ -102,21 +102,58 @@ button {
   flex: 0 0 auto;
 }
 
-.topbar {
+.topbar-wrapper {
   position: sticky;
-  z-index: 20;
   top: 0;
+  z-index: 50;
+  width: 100%;
+  padding: 0;
+  transition: padding 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.topbar-wrapper.is-scrolled {
+  padding: 12px 16px;
+}
+
+.topbar-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   border-bottom: 1px solid rgba(111, 52, 92, 0.12);
-  background: rgba(255, 248, 251, 0.86);
+  background: rgba(255, 248, 251, 0.88);
   backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition: max-width 350ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-radius 350ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 350ms cubic-bezier(0.16, 1, 0.3, 1),
+              background 350ms cubic-bezier(0.16, 1, 0.3, 1),
+              border 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.topbar-wrapper.is-scrolled .topbar-container {
+  max-width: 1140px;
+  border-radius: 999px;
+  border: 1px solid rgba(143, 45, 104, 0.22);
+  background: rgba(255, 248, 251, 0.94);
+  box-shadow: 0 16px 42px rgba(142, 77, 122, 0.16), 0 2px 8px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
 .topbar-inner {
   display: flex;
-  min-height: 68px;
+  min-height: 64px;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 20px;
+  padding: 0 24px;
+  transition: min-height 350ms cubic-bezier(0.16, 1, 0.3, 1),
+              padding 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.topbar-wrapper.is-scrolled .topbar-inner {
+  min-height: 56px;
+  padding: 0 20px;
 }
 
 .brand {
@@ -292,10 +329,11 @@ button {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 8px 14px;
-  color: #4e354a;
-  font-size: 14px;
+  gap: 10px 18px;
+  color: var(--ink);
+  font-size: 17px;
   font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .author-name {
@@ -306,38 +344,39 @@ button {
 
 .author-name sup,
 .affiliation-list sup {
-  margin-left: 2px;
+  margin-left: 3px;
   color: var(--plum);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 900;
 }
 
 .author-separator {
-  margin-left: 14px;
+  margin-left: 18px;
   color: rgba(143, 45, 104, 0.35);
   font-weight: 400;
 }
 
 .affiliation-list {
-  margin-top: 13px;
+  margin-top: 14px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13.5px;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.5;
   text-align: center;
 }
 
 .affiliation-list p {
-  margin: 2px 0;
+  margin: 3px 0;
 }
 
 .author-note {
-  margin-top: 8px;
-  color: #aa8b9f;
+  margin-top: 12px;
+  color: var(--plum-deep);
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
-
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1364,7 +1403,7 @@ tbody tr:hover td {
 .reveal {
   opacity: 0;
   transform: translateY(18px);
-  transition: opacity 650ms ease, transform 650ms ease;
+  transition: opacity 650ms cubic-bezier(0.16, 1, 0.3, 1), transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal.is-visible {
@@ -1380,6 +1419,67 @@ tbody tr:hover td {
   transition-delay: 160ms;
 }
 
+/* Hero & Abstract specialized staggered entrance animations */
+@keyframes heroCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes heroItemFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-panel.is-visible {
+  animation: heroCardEnter 850ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-panel.is-visible .acceptance-pill {
+  animation: heroItemFadeUp 750ms cubic-bezier(0.16, 1, 0.3, 1) 100ms forwards;
+}
+
+.hero-panel.is-visible h1 {
+  animation: heroItemFadeUp 800ms cubic-bezier(0.16, 1, 0.3, 1) 220ms forwards;
+}
+
+.hero-panel.is-visible .author-block {
+  animation: heroItemFadeUp 850ms cubic-bezier(0.16, 1, 0.3, 1) 340ms forwards;
+}
+
+.hero-panel.is-visible .hero-actions {
+  animation: heroItemFadeUp 850ms cubic-bezier(0.16, 1, 0.3, 1) 460ms forwards;
+}
+
+@keyframes abstractPanelEnter {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#abstract .abstract-panel.is-visible {
+  animation: abstractPanelEnter 900ms cubic-bezier(0.16, 1, 0.3, 1) 120ms forwards;
+}
+
+#abstract .side-heading.is-visible {
+  animation: heroItemFadeUp 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 @media (max-width: 1000px) {
   .main-nav {
     gap: 15px;

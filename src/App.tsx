@@ -238,6 +238,17 @@ export function App() {
   const [copied, setCopied] = useState(false)
   useRevealOnScroll()
 
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 25)
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
   const handleCopyCitation = useCallback(async () => {
     const bibtex = `@inproceedings{vo2027aegis,
   author    = {Vo, Long Minh and Vu, Gia-Hung and Tran, Danh Kim and Nguyen, Huynh-Minh-Khoa and Tran, Kien Vi and Chau, Thi-Tuyet-Trang},
@@ -246,7 +257,7 @@ export function App() {
   series    = {Lecture Notes in Computer Science},
   publisher = {Springer Nature},
   year      = {2027},
-  note      = {Video Browser Showdown (VBS 2027) Extended Demo}
+  note      = {Submitted to Video Browser Showdown (VBS 2027) Extended Demo}
 }`
     try {
       await navigator.clipboard.writeText(bibtex)
@@ -259,28 +270,29 @@ export function App() {
 
   return (
     <div className="site-frame">
-      <header className="topbar">
-        <div className="container topbar-inner">
-          <a className="brand" href="#top" aria-label="AEGIS home">
-            <span className="brand-mark" aria-hidden="true"><span /></span>
-            <span>AEGIS</span>
-          </a>
+      <header className={`topbar-wrapper ${isScrolled ? "is-scrolled" : ""}`}>
+        <div className="topbar-container">
+          <div className="topbar-inner">
+            <a className="brand" href="#top" aria-label="AEGIS home">
+              <span className="brand-mark" aria-hidden="true"><span /></span>
+              <span>AEGIS</span>
+            </a>
 
-          <nav className="main-nav" aria-label="Primary navigation">
-            <a href="#abstract">Abstract</a>
-            <a href="#pillars">Pillars</a>
-            <a href="#system-flow">System Flow</a>
-            <a href="#topology">Topology</a>
-            <a href="#performance">Performance</a>
-            <a href="#news">News</a>
-            <a href="#citation">Citation</a>
-          </nav>
-          <a className="nav-action" href={PAPER_PDF} target="_blank" rel="noreferrer">
-            Paper PDF <ArrowUpRight className="icon-small" />
-          </a>
+            <nav className="main-nav" aria-label="Primary navigation">
+              <a href="#abstract">Abstract</a>
+              <a href="#pillars">Pillars</a>
+              <a href="#system-flow">System Flow</a>
+              <a href="#topology">Topology</a>
+              <a href="#performance">Performance</a>
+              <a href="#news">News</a>
+              <a href="#citation">Citation</a>
+            </nav>
+            <a className="nav-action" href={PAPER_PDF} target="_blank" rel="noreferrer">
+              Paper PDF <ArrowUpRight className="icon-small" />
+            </a>
+          </div>
         </div>
       </header>
-
       <main id="top">
         <section className="hero section-anchor">
           <div className="container hero-panel reveal is-visible">
