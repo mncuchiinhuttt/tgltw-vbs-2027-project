@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-preset="classic">
+<html lang="en" data-theme="light" data-preset="classic">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,8 +24,8 @@
         if (!theme) {
           try { theme = localStorage.getItem('archify-theme'); } catch (_) {}
         }
-        if (theme !== 'light' && theme !== 'dark') {
-          theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        if (!theme || (theme !== 'light' && theme !== 'dark')) {
+          theme = 'light';
         }
         document.documentElement.setAttribute('data-theme', theme);
       } catch (_) {}
@@ -88,43 +88,43 @@
     }
 
     [data-theme="light"] {
-      --bg: #f8fafc;
-      --grid: #e2e8f0;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --text-dim: #94a3b8;
-      --text-faint: #64748b;
+      --bg: #fff8fb;
+      --grid: rgba(155, 102, 143, 0.12);
+      --text: #321b33;
+      --text-muted: #8b7083;
+      --text-dim: #b099a8;
+      --text-faint: #8b7083;
 
-      --panel: #ffffff;
-      --panel-border: #e2e8f0;
-      --lane-fill: rgba(248, 250, 252, 0.65);
-      --lane-stroke: #cbd5e1;
+      --panel: rgba(255, 255, 255, 0.95);
+      --panel-border: rgba(143, 45, 104, 0.18);
+      --lane-fill: rgba(250, 216, 235, 0.35);
+      --lane-stroke: rgba(143, 45, 104, 0.22);
 
-      --arrow: #94a3b8;
-      --arrow-emphasis: #059669;
+      --arrow: #8b7083;
+      --arrow-emphasis: #8f2d68;
 
-      --mask: #ffffff;
+      --mask: #fff8fb;
 
-      --frontend-fill:    rgba(34, 211, 238, 0.15);
+      --frontend-fill:    rgba(34, 211, 238, 0.18);
       --frontend-stroke:  #0891b2;
-      --backend-fill:     rgba(52, 211, 153, 0.18);
+      --backend-fill:     rgba(52, 211, 153, 0.2);
       --backend-stroke:   #059669;
-      --database-fill:    rgba(167, 139, 250, 0.2);
+      --database-fill:    rgba(167, 139, 250, 0.22);
       --database-stroke:  #7c3aed;
-      --cloud-fill:       rgba(251, 191, 36, 0.18);
+      --cloud-fill:       rgba(251, 191, 36, 0.2);
       --cloud-stroke:     #d97706;
-      --security-fill:    rgba(251, 113, 133, 0.15);
+      --security-fill:    rgba(251, 113, 133, 0.2);
       --security-stroke:  #e11d48;
-      --messagebus-fill:  rgba(251, 146, 60, 0.15);
+      --messagebus-fill:  rgba(251, 146, 60, 0.2);
       --messagebus-stroke:#ea580c;
-      --external-fill:    rgba(148, 163, 184, 0.18);
+      --external-fill:    rgba(148, 163, 184, 0.2);
       --external-stroke:  #64748b;
 
-      --toolbar-bg:       rgba(255, 255, 255, 0.92);
-      --toolbar-border:   #cbd5e1;
-      --toolbar-text:     #334155;
+      --toolbar-bg:       rgba(255, 248, 251, 0.95);
+      --toolbar-border:   rgba(143, 45, 104, 0.2);
+      --toolbar-text:     #321b33;
       --toolbar-hover:    #ffffff;
-      --toolbar-menu-bg:  #ffffff;
+      --toolbar-menu-bg:  rgba(255, 255, 255, 0.98);
     }
 
     /* ==========================================================
@@ -8528,6 +8528,23 @@
         var nodeRect = node.getBoundingClientRect();
         if (containerRect.bottom <= 0 || containerRect.top >= window.innerHeight) return;
         var padding = window.innerWidth <= 720 ? 8 : 16;
+
+        // Dynamic non-obstructive horizontal placement
+        if (window.innerWidth > 720) {
+          var nodeRelativeLeft = nodeRect.left - containerRect.left;
+          var containerWidth = containerRect.width;
+          if (nodeRelativeLeft < containerWidth * 0.48) {
+            chip.style.left = 'auto';
+            chip.style.right = padding + 'px';
+          } else {
+            chip.style.left = padding + 'px';
+            chip.style.right = 'auto';
+          }
+        } else {
+          chip.style.left = padding + 'px';
+          chip.style.right = 'auto';
+        }
+
         var visibleTop = Math.max(padding, -containerRect.top + padding);
         var visibleBottom = Math.min(containerRect.height - padding, window.innerHeight - containerRect.top - padding);
         var maxTop = Math.max(padding, visibleBottom - chip.offsetHeight);
@@ -8652,7 +8669,8 @@
         relationsBtn.setAttribute('aria-expanded', 'false');
         chip.removeAttribute('data-relations-expanded');
         chip.style.removeProperty('top');
-        if (options.preserveView !== true && Archify.view && typeof Archify.view.reset === 'function') {
+        chip.style.removeProperty('left');
+        chip.style.removeProperty('right');
           Archify.view.reset({ automatic: true });
         }
         if (options.updateUrl !== false) {

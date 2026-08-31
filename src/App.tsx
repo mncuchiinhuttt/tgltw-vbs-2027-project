@@ -14,19 +14,14 @@ import {
   Film,
   Layers,
   MessageSquare,
-  PlayCircle,
   Search,
   ShieldCheck,
   Sliders,
   type LucideIcon,
 } from "lucide-react"
-
 const VBS_REPO = "https://github.com/mncuchiinhuttt/tgltw-vbs-2027"
 const PROJECT_REPO = "https://github.com/mncuchiinhuttt/tgltw-vbs-2027-project"
-const PAPER_SOURCE = `${VBS_REPO}/blob/main/paper/main.tex`
 const PAPER_PDF = `${VBS_REPO}/blob/main/paper/main.pdf`
-const LIVE_DEMO = "http://localhost:3000"
-
 interface Author {
   name: string
   affiliations: string[]
@@ -280,8 +275,8 @@ export function App() {
             <a href="#news">News</a>
             <a href="#citation">Citation</a>
           </nav>
-          <a className="nav-action" href={LIVE_DEMO} target="_blank" rel="noreferrer">
-            Live System UI <ArrowUpRight className="icon-small" />
+          <a className="nav-action" href={PAPER_PDF} target="_blank" rel="noreferrer">
+            Paper PDF <ArrowUpRight className="icon-small" />
           </a>
         </div>
       </header>
@@ -330,12 +325,6 @@ export function App() {
                 </a>
                 <a className="action-button action-outline" href={VBS_REPO} target="_blank" rel="noreferrer">
                   <Code2 className="icon-small" /> Code (GitHub)
-                </a>
-                <a className="action-button action-outline" href={PAPER_SOURCE} target="_blank" rel="noreferrer">
-                  <BookOpen className="icon-small" /> LaTeX Source
-                </a>
-                <a className="action-button action-cyan" href={LIVE_DEMO} target="_blank" rel="noreferrer">
-                  <PlayCircle className="icon-small" /> Live System UI
                 </a>
               </div>
             </div>
@@ -448,9 +437,9 @@ export function App() {
                   </a>
                 </div>
               </div>
-              <div className="w-full h-[520px] sm:h-[600px] rounded-2xl overflow-hidden border border-plum/15 shadow-inner bg-[#070A11]">
+              <div className="w-full h-[520px] sm:h-[600px] rounded-2xl overflow-hidden border border-plum/15 shadow-inner bg-[#fff8fb]">
                 <iframe
-                  src="/aegis-architecture.html?theme=dark"
+                  src="/aegis-architecture.html?theme=light"
                   title="AEGIS Multimodal Retrieval Architecture Interactive Topology"
                   className="w-full h-full border-0"
                   loading="lazy"
@@ -830,7 +819,6 @@ export function App() {
           <div className="footer-links">
             <a href={VBS_REPO} target="_blank" rel="noreferrer">GitHub <ArrowUpRight className="icon-small" /></a>
             <a href={PROJECT_REPO} target="_blank" rel="noreferrer">Project Page <ExternalLink className="icon-small" /></a>
-            <a href={PAPER_SOURCE} target="_blank" rel="noreferrer">Paper Source <ArrowUpRight className="icon-small" /></a>
             <a href="https://videobrowsershowdown.org/" target="_blank" rel="noreferrer">VBS <ExternalLink className="icon-small" /></a>
           </div>
         </div>
