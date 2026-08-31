@@ -389,26 +389,26 @@
        while presenting only its diagram surface inside a proof card. */
     html[data-embed="true"] body {
       min-height: 0;
-      padding: 0;
+      padding: 0.35rem 0.5rem;
       overflow: hidden;
       background: var(--bg);
       background-image: none;
     }
     html[data-embed="true"] .toolbar,
     html[data-embed="true"] .header,
-    html[data-embed="true"] .cards,
-    html[data-embed="true"] .guided-views { display: none !important; }
+    html[data-embed="true"] .cards { display: none !important; }
     html[data-embed="true"] .container { max-width: none; margin: 0; padding: 0; }
+    html[data-embed="true"] .guided-views {
+      margin-bottom: 0.5rem;
+    }
     html[data-embed="true"] .diagram-container {
       padding: 0.25rem;
       border: 0;
       border-radius: 0;
       box-shadow: none;
-      height: 100vh;
     }
     html[data-embed="true"] .diagram-container svg {
       width: 100%;
-      height: 100%;
       min-width: 0;
     }
 

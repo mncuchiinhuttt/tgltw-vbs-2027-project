@@ -448,7 +448,7 @@ export function App() {
                   </a>
                 </div>
               </div>
-              <div className="w-full h-[620px] sm:h-[740px] lg:h-[820px] rounded-2xl overflow-hidden border border-plum/15 shadow-inner bg-[#fff8fb]">
+              <div className="w-full h-[680px] sm:h-[800px] lg:h-[880px] rounded-2xl overflow-hidden border border-plum/15 shadow-inner bg-[#fff8fb]">
                 <iframe
                   src="/aegis-architecture.html?theme=light&embed=1"
                   title="AEGIS Multimodal Retrieval Architecture Interactive Topology"
