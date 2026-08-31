@@ -6,6 +6,7 @@ This repository is a React + Vite + TypeScript app styled with Tailwind CSS. The
 
 ## Links
 
+
 - Project page source: <https://github.com/mncuchiinhuttt/tgltw-vbs-2027-project>
 - System repository: <https://github.com/mncuchiinhuttt/tgltw-vbs-2027>
 - Paper source: <https://github.com/mncuchiinhuttt/tgltw-vbs-2027/blob/main/paper/main.tex>
