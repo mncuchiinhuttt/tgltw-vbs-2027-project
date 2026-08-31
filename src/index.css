@@ -78,7 +78,7 @@ button {
 
 .site-frame {
   min-height: 100vh;
-  overflow: hidden;
+  position: relative;
 }
 
 .container {
@@ -103,11 +103,14 @@ button {
 }
 
 .topbar-wrapper {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 50;
+  left: 0;
+  right: 0;
   width: 100%;
+  z-index: 50;
   padding: 0;
+  pointer-events: none;
   transition: padding 350ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -117,12 +120,13 @@ button {
 
 .topbar-container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
+  pointer-events: auto;
   border-bottom: 1px solid rgba(111, 52, 92, 0.12);
-  background: rgba(255, 248, 251, 0.88);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: rgba(255, 248, 251, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   transition: max-width 350ms cubic-bezier(0.16, 1, 0.3, 1),
               border-radius 350ms cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 350ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -134,7 +138,7 @@ button {
   max-width: 1140px;
   border-radius: 999px;
   border: 1px solid rgba(143, 45, 104, 0.22);
-  background: rgba(255, 248, 251, 0.94);
+  background: rgba(255, 248, 251, 0.95);
   box-shadow: 0 16px 42px rgba(142, 77, 122, 0.16), 0 2px 8px rgba(0, 0, 0, 0.04);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -142,11 +146,14 @@ button {
 
 .topbar-inner {
   display: flex;
-  min-height: 64px;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  min-height: 66px;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 0 24px;
+  padding: 0 28px;
   transition: min-height 350ms cubic-bezier(0.16, 1, 0.3, 1),
               padding 350ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -155,7 +162,6 @@ button {
   min-height: 56px;
   padding: 0 20px;
 }
-
 .brand {
   display: inline-flex;
   align-items: center;
@@ -262,10 +268,13 @@ button {
   transform: translateY(-2px);
 }
 
-.hero {
-  padding: 54px 0 46px;
+main {
+  padding-top: 68px;
 }
 
+.hero {
+  padding: 40px 0 46px;
+}
 .hero-panel {
   position: relative;
   display: block;

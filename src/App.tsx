@@ -422,7 +422,7 @@ export function App() {
 
         {/* Seamless Integrated Topology Diagram */}
         <section id="topology" className="section-anchor content-section">
-          <div className="container">
+          <div className="container !max-w-[1340px]">
             <div className="section-heading centered reveal">
               <span className="eyebrow">SYSTEM TOPOLOGY</span>
               <h2>Interactive Architecture Topology</h2>
@@ -448,7 +448,7 @@ export function App() {
                   </a>
                 </div>
               </div>
-              <div className="w-full h-[520px] sm:h-[600px] rounded-2xl overflow-hidden border border-plum/15 shadow-inner bg-[#fff8fb]">
+              <div className="w-full h-[620px] sm:h-[740px] lg:h-[820px] rounded-2xl overflow-hidden border border-plum/15 shadow-inner bg-[#fff8fb]">
                 <iframe
                   src="/aegis-architecture.html?theme=light"
                   title="AEGIS Multimodal Retrieval Architecture Interactive Topology"
