@@ -127,7 +127,7 @@ const pillars: Pillar[] = [
   {
     number: "02",
     title: "Peak Conversational KIS-C",
-    description: "Entity-preserving CQR paired with dynamic ambiguity detection ($DVR + SMA$), compound n-gram phrase boosting, and negative feedback filtering. Converts ambiguous pools to Rank #1 hits.",
+    description: "Entity-preserving CQR paired with dynamic ambiguity detection (DVR + SMA), compound n-gram phrase boosting, and negative feedback filtering. Converts ambiguous pools to Rank #1 hits.",
     metric: "Recall@1: 100.0% · MRR: 1.000 · Delta Ambiguity: -0.58",
     icon: MessageSquare,
     tone: "pink",
@@ -363,7 +363,7 @@ export function App() {
                 Interactive video retrieval in timed competition environments presents severe trade-offs between retrieval latency, semantic coverage, and answer faithfulness. In this paper, we present <strong>AEGIS</strong> (<strong>A</strong>daptive <strong>E</strong>vidence-<strong>G</strong>rounded <strong>I</strong>nteractive <strong>S</strong>earch), a live-first multimodal video retrieval system developed by team <strong>TGLTW-RMIT</strong> for the Video Browser Showdown (VBS 2027).
               </p>
               <p>
-                AEGIS is built around high-capacity multimodal representations (Tencent WeMM-Embedding-4B with Matryoshka Representation Learning), parallelized vision-language reranking, strict fail-closed Visual Question Answering (VQA), and a peak Conversational Known-Item Search (KIS-C) engine. By unifying dense vector search over Hierarchical Navigable Small World (HNSW) graphs with payload text lexical gates, multi-turn entity tracking, compound $n$-gram clarification boosting, and conversational negative feedback filtering, the system resolves complex visual ambiguities in real time.
+                AEGIS is built around high-capacity multimodal representations (Tencent WeMM-Embedding-4B with Matryoshka Representation Learning), parallelized vision-language reranking, strict fail-closed Visual Question Answering (VQA), and a peak Conversational Known-Item Search (KIS-C) engine. By unifying dense vector search over Hierarchical Navigable Small World (HNSW) graphs with payload text lexical gates, multi-turn entity tracking, compound <em>n</em>-gram clarification boosting, and conversational negative feedback filtering, the system resolves complex visual ambiguities in real time.
               </p>
               <p>
                 Evaluated on the V3C dataset via an automated zero-temperature LLM-as-a-judge protocol powered by Gemini 3.7 Flash (High), AEGIS achieves an Overall RAG Score of <strong>94.7/100.0</strong> in core competition tasks with <strong>88.9%</strong> Recall@1 (100.0% Recall@5, MRR 0.944). Across a 200-query corpus stress test, the full engine maintains <strong>71.1%</strong> Recall@1, <strong>86.8%</strong> Recall@5 (MRR 0.785), <strong>96.7%</strong> Grounded VQA Exact Match, and <strong>100.0%</strong> fail-closed safety rate without hallucinations.
