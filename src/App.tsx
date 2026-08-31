@@ -64,7 +64,7 @@ const newsList: NewsItem[] = [
     linkLabel: "Read Paper PDF",
   },
   {
-    date: "JUN 2026",
+    date: "15 MAY 2026",
     tag: "FORMATION",
     tagColor: "emerald",
     title: "Team The Gays Lead The World (TGLTW) RMIT officially formed",
