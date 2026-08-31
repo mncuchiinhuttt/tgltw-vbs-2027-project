@@ -1489,122 +1489,237 @@ tbody tr:hover td {
 #abstract .side-heading.is-visible {
   animation: heroItemFadeUp 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-@media (max-width: 1000px) {
-  .main-nav {
-    gap: 15px;
-    font-size: 12px;
+/* Tablet & Mobile Responsiveness System */
+@media (max-width: 1024px) {
+  .topbar-wrapper.is-scrolled {
+    padding: 8px 12px;
   }
 
-  .hero-copy {
-    padding-inline: 34px;
+  .topbar-inner {
+    flex-wrap: wrap;
+    padding: 10px 18px 8px;
+    gap: 8px;
+    min-height: auto;
+  }
+
+  .topbar-wrapper.is-scrolled .topbar-inner {
+    padding: 8px 14px 6px;
+    min-height: auto;
+  }
+
+  .main-nav {
+    order: 3;
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 2px 6px;
+    gap: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .main-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .main-nav a {
+    flex: 0 0 auto;
+    padding: 5px 12px;
+    background: rgba(250, 216, 235, 0.45);
+    border: 1px solid rgba(143, 45, 104, 0.15);
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 750;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .main-nav a::after {
+    display: none;
+  }
+
+  .main-nav a:hover,
+  .main-nav a:focus-visible {
+    background: var(--plum);
+    color: white;
   }
 
   .flow-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
   }
 
-  .flow-card {
-    min-height: 215px;
-  }
-
-  .task-grid {
+  .pillar-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .container {
-    width: min(100% - 34px, 620px);
+    width: calc(100% - 24px);
+    max-width: 100%;
+    padding-inline: 0;
   }
 
-  .topbar-inner {
-    min-height: 60px;
+  main {
+    padding-top: 92px;
   }
 
-  .main-nav {
-    display: none;
-  }
-
-  .nav-action {
-    min-height: 34px;
-    padding-inline: 12px;
-    font-size: 10px;
+  .section-anchor {
+    scroll-margin-top: 105px;
   }
 
   .hero {
-    padding-top: 24px;
+    padding: 16px 0 32px;
   }
 
   .hero-panel {
-    display: block;
-    border-radius: 27px;
+    border-radius: 24px;
   }
 
   .hero-copy {
-    padding: 32px 24px 28px;
-  }
-
-  .hero h1 {
-    margin-top: 21px;
-    font-size: clamp(2.7rem, 11vw, 4.25rem);
+    padding: 24px 16px 20px;
   }
 
   .acceptance-pill {
-    align-items: flex-start;
-    border-radius: 17px;
-    font-size: 10px;
-    line-height: 1.35;
+    font-size: 11px;
+    line-height: 1.4;
+    padding: 7px 12px;
+    border-radius: 16px;
+    text-align: center;
+    max-width: 100%;
+    align-items: center;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.85rem, 6.8vw, 2.6rem);
+    line-height: 1.15;
+    margin: 18px 0 20px;
+    letter-spacing: -0.03em;
+    word-break: normal;
   }
 
   .author-list {
-    font-size: 13px;
+    font-size: 15px;
+    gap: 6px 12px;
+    line-height: 1.4;
+  }
+
+  .author-separator {
+    margin-left: 10px;
+  }
+
+  .affiliation-list {
+    font-size: 12.5px;
+    line-height: 1.5;
+    margin-top: 12px;
+  }
+
+  .author-note {
+    font-size: 11px;
+    margin-top: 10px;
   }
 
   .hero-actions {
-    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin-top: 22px;
   }
 
   .action-button {
-    flex: 1 1 calc(50% - 10px);
+    width: 100%;
     justify-content: center;
-    padding-inline: 10px;
-    font-size: 11px;
+    font-size: 13px;
+    padding: 12px 18px;
+    border-radius: 14px;
   }
 
   .content-layout {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
   .side-heading {
     position: static;
-    margin-bottom: 25px;
+    margin-bottom: 4px;
+  }
+
+  .side-rule,
+  .side-caption {
+    display: none;
   }
 
   .abstract-panel {
-    padding: 28px 25px;
+    padding: 20px 18px;
+    border-radius: 20px;
+  }
+
+  .abstract-panel p {
+    font-size: 13.5px;
+    line-height: 1.6;
   }
 
   .abstract-panel .abstract-lead {
-    font-size: 16px;
+    font-size: 14.5px;
   }
 
   .pillar-grid,
-  .task-grid {
+  .flow-grid {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
 
-  .pillar-card {
-    min-height: 250px;
+  .pillar-card,
+  .flow-card {
+    min-height: auto;
+    padding: 20px 18px;
+    border-radius: 20px;
+  }
+
+  .flow-arrow {
+    display: none;
+  }
+
+  .task-grid-bento {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .task-card-v2 {
+    min-height: auto;
+    padding: 20px 18px;
+    border-radius: 20px;
+  }
+
+  .performance-panel {
+    padding: 18px 12px;
+    border-radius: 20px;
   }
 
   .panel-heading-row {
-    align-items: flex-start;
+    padding: 12px 14px;
     flex-direction: column;
-    padding: 21px 20px;
+    align-items: flex-start;
+    gap: 8px;
   }
 
-  .status-chip {
-    white-space: normal;
+  .paper-table th {
+    font-size: 10px;
+    padding: 10px 12px;
+  }
+
+  .paper-table td {
+    font-size: 11.5px;
+    padding: 9px 12px;
+  }
+
+  .ablation-section-row td {
+    font-size: 10px;
+    padding: 8px 12px;
   }
 
   .news-timeline::before {
@@ -1625,53 +1740,49 @@ tbody tr:hover td {
     left: -27px;
   }
 
+  .news-card {
+    padding: 18px 16px;
+    border-radius: 20px;
+  }
+
+  .news-card h3 {
+    font-size: 16px;
+  }
+
   .footer-inner {
-    align-items: flex-start;
     flex-direction: column;
-    justify-content: center;
-    padding: 25px 0;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px 0;
   }
 
   .footer-links {
     justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 12px 16px;
   }
 }
 
 @media (max-width: 480px) {
-  .hero-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  .hero-copy {
+    padding: 20px 14px 18px;
   }
 
-  .action-button {
-    width: 100%;
+  .hero h1 {
+    font-size: clamp(1.65rem, 7.5vw, 2.1rem);
   }
 
-  .flow-grid {
-    grid-template-columns: 1fr;
+  .author-list {
+    font-size: 14px;
   }
 
-  .flow-card {
-    min-height: 210px;
+  .task-v2-flow {
+    gap: 3px;
   }
 
-  .news-card {
-    padding: 19px;
-  }
-
-  .news-meta {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .citation-panel .panel-heading-row {
-    gap: 15px;
-  }
-
-  .copy-button {
-    width: 100%;
-    justify-content: center;
+  .task-v2-step-pill {
+    font-size: 9.5px;
+    padding: 2px 5px;
   }
 }
 
