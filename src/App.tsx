@@ -424,33 +424,33 @@ export function App() {
         <section id="topology" className="section-anchor content-section">
           <div className="container !max-w-[1340px]">
             <div className="section-heading centered reveal">
-              <span className="eyebrow">SYSTEM TOPOLOGY</span>
-              <h2>Interactive Architecture Topology</h2>
-              <p>Explorable Node-by-Node Pipeline &amp; Dataflow Map</p>
+              <span className="eyebrow">SYSTEM ARCHITECTURE</span>
+              <h2>AEGIS Multimodal Video Retrieval Architecture</h2>
+              <p>Interactive System Topology · Explorable Node-by-Node Pipeline &amp; Dataflow Map</p>
             </div>
 
             <div className="paper-panel reveal overflow-hidden !p-3 sm:!p-6">
               <div className="panel-heading-row mb-3">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
-                  <h3 className="text-sm sm:text-base font-bold text-slate-800">AEGIS Multimodal System Topology</h3>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-3 h-3 rounded-full bg-plum animate-pulse" />
+                  <h3 className="text-base sm:text-lg font-black text-ink">Interactive Topology Canvas</h3>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="status-chip">Interactive Map</span>
+                  <span className="status-chip">Live Interactive Map</span>
                   <a
                     href="/aegis-architecture.html"
                     target="_blank"
                     rel="noreferrer"
                     className="text-xs font-mono text-plum hover:text-plum-deep flex items-center gap-1 font-bold transition"
                   >
-                    <span>Full Canvas</span>
+                    <span>Open Full Screen</span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 </div>
               </div>
               <div className="w-full h-[620px] sm:h-[740px] lg:h-[820px] rounded-2xl overflow-hidden border border-plum/15 shadow-inner bg-[#fff8fb]">
                 <iframe
-                  src="/aegis-architecture.html?theme=light"
+                  src="/aegis-architecture.html?theme=light&embed=1"
                   title="AEGIS Multimodal Retrieval Architecture Interactive Topology"
                   className="w-full h-full border-0"
                   loading="lazy"
