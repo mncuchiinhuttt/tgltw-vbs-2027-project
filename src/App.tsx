@@ -11,8 +11,11 @@ import {
   Database,
   ExternalLink,
   FileText,
+  Film,
+  Layers,
   MessageSquare,
   PlayCircle,
+  Search,
   ShieldCheck,
   Sliders,
   type LucideIcon,
@@ -152,6 +155,8 @@ interface TaskDefinition {
   description: string
   flow: string[]
   highlight?: string
+  tone: "pink" | "plum" | "emerald" | "cyan" | "yellow"
+  icon: LucideIcon
 }
 
 const tasks: TaskDefinition[] = [
@@ -161,7 +166,9 @@ const tasks: TaskDefinition[] = [
     title: "Translate memory into a target frame.",
     description: "4-Way RRF fusion over Tencent WeMM-Embedding-4B dense vectors and BM25 payload text, followed by parallelized VLM verification.",
     flow: ["Text Query", "WeMM Dense + BM25", "4-Way RRF", "VLM Rerank"],
-    highlight: "Recall@5 100%",
+    highlight: "Recall@5: 100%",
+    tone: "pink",
+    icon: Search,
   },
   {
     code: "KIS-C",
@@ -170,6 +177,8 @@ const tasks: TaskDefinition[] = [
     description: "Entity-preserving CQR paired with dynamic ambiguity detection (DVR + SMA), compound n-gram boosting, and negative feedback filtering.",
     flow: ["Multi-turn CQR", "Ambiguity Check", "N-gram Boost", "Negative Filter"],
     highlight: "Turn 2 R@1: 100%",
+    tone: "plum",
+    icon: MessageSquare,
   },
   {
     code: "VQA",
@@ -178,6 +187,8 @@ const tasks: TaskDefinition[] = [
     description: "Real keyframe resolution inside dataset root, YOLOE-26 bounding-box cropping, and a strict fail-closed contract that yields UNKNOWN on missing media.",
     flow: ["Question", "Evidence Frame", "YOLOE Crop", "Fail-Closed VLM"],
     highlight: "0% Hallucination",
+    tone: "emerald",
+    icon: ShieldCheck,
   },
   {
     code: "AVS",
@@ -186,6 +197,8 @@ const tasks: TaskDefinition[] = [
     description: "Broad multimodal retrieval combined with soft duplicate-video guards to prevent repetitive single-video submissions to DRES judges.",
     flow: ["Broad Concept", "Cross-Video Diversity", "Timeline Browse", "DRES Batch"],
     highlight: "Cross-Video Coverage",
+    tone: "cyan",
+    icon: Layers,
   },
   {
     code: "KIS-V",
@@ -194,9 +207,10 @@ const tasks: TaskDefinition[] = [
     description: "Representative multi-point clip sampling (up to 8 frames) embedded via WeMM-4B and parallel-searched across Qdrant point indices.",
     flow: ["Visual Clip", "8-Frame Sampling", "WeMM-4B Search", "Point Merge"],
     highlight: "Multi-Point Sampling",
+    tone: "yellow",
+    icon: Film,
   },
 ]
-
 function useRevealOnScroll() {
   useEffect(() => {
     const items = document.querySelectorAll<HTMLElement>(".reveal")
@@ -445,32 +459,59 @@ export function App() {
             </div>
           </div>
         </section>
-        <section className="section-anchor content-section tasks-section">
+        <section id="tasks" className="section-anchor content-section tasks-section">
           <div className="container">
             <div className="section-heading reveal">
               <span className="eyebrow">VBS COMPETITION MODES</span>
               <h2>Five Task Execution Lanes</h2>
+              <p>Specialized Execution Pipelines Tailored for Each Competition Task</p>
             </div>
-            <div className="task-grid">
-              {tasks.map((task) => (
-                <article key={task.code} className="task-card reveal">
-                  <div className="task-head">
-                    <span className="task-code">{task.code}</span>
-                    <span className="task-type">{task.type}</span>
-                  </div>
-                  <h3>{task.title}</h3>
-                  <p>{task.description}</p>
-                  <div className="task-flow">
-                    {task.flow.map((step, index) => (
-                      <span key={step} className="task-step">
-                        {index > 0 && <span className="task-arrow">→</span>}
-                        <span>{step}</span>
-                      </span>
-                    ))}
-                  </div>
-                  {task.highlight && <div className="task-highlight"><Check className="icon-small" /> {task.highlight}</div>}
-                </article>
-              ))}
+
+            <div className="task-grid-bento">
+              {tasks.map((task, index) => {
+                const Icon = task.icon
+                const isFeatured = index < 2
+                return (
+                  <article
+                    key={task.code}
+                    className={`task-card-v2 task-card-${task.tone} ${isFeatured ? "task-card-featured" : "task-card-standard"} reveal`}
+                  >
+                    <div className="task-v2-header">
+                      <div className="task-v2-badge-group">
+                        <span className="task-v2-code">{task.code}</span>
+                        <span className="task-v2-type">{task.type}</span>
+                      </div>
+                      <div className="task-v2-icon-disc">
+                        <Icon className="w-4 h-4" />
+                      </div>
+                    </div>
+
+                    <div className="task-v2-body">
+                      <h3 className="task-v2-title">{task.title}</h3>
+                      <p className="task-v2-desc">{task.description}</p>
+                    </div>
+
+                    <div className="task-v2-footer">
+                      <div className="task-v2-flow-label">Execution Pipeline</div>
+                      <div className="task-v2-flow">
+                        {task.flow.map((step, sIdx) => (
+                          <span key={step} className="task-v2-step">
+                            {sIdx > 0 && <span className="task-v2-arrow">→</span>}
+                            <span className="task-v2-step-pill">{step}</span>
+                          </span>
+                        ))}
+                      </div>
+
+                      {task.highlight && (
+                        <div className="task-v2-highlight">
+                          <Check className="w-3.5 h-3.5" />
+                          <span>{task.highlight}</span>
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                )
+              })}
             </div>
           </div>
         </section>
@@ -487,13 +528,13 @@ export function App() {
             <div className="paper-panel performance-panel reveal mb-8">
               <div className="panel-heading-row">
                 <div>
-                  <span className="eyebrow text-xs text-cyan-400 font-mono">TABLE 1</span>
-                  <h3 className="text-base font-bold text-slate-100">Ablation Study 1 &amp; 2: Retrieval Fusion &amp; Multi-Turn KIS-C Progression</h3>
+                  <span className="eyebrow text-xs text-plum font-mono">TABLE 1</span>
+                  <h3 className="text-base sm:text-lg font-black text-ink">Ablation Study 1 &amp; 2: Retrieval Fusion &amp; Multi-Turn KIS-C Progression</h3>
                 </div>
                 <span className="status-chip">V3C Corpus Benchmark</span>
               </div>
               <div className="table-scroll">
-                <table>
+                <table className="paper-table">
                   <thead>
                     <tr>
                       <th>Pipeline Configuration / Stage</th>
@@ -505,103 +546,104 @@ export function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="bg-slate-900/40">
-                      <td colSpan={6} className="font-mono text-xs text-cyan-300 font-bold uppercase tracking-wider">
+                    <tr className="ablation-section-row">
+                      <td colSpan={6}>
                         Ablation 1: Multimodal Retrieval &amp; Fusion Components (200-Query Corpus Test)
                       </td>
                     </tr>
                     <tr>
-                      <td>(M1) Dense Only (WeMM-4B)</td>
-                      <td>26.3</td>
-                      <td>48.4</td>
-                      <td>55.8</td>
-                      <td>0.354</td>
-                      <td>0.038s</td>
+                      <td className="font-bold text-ink">(M1) Dense Only (WeMM-4B)</td>
+                      <td className="cell-num">26.3</td>
+                      <td className="cell-num">48.4</td>
+                      <td className="cell-num">55.8</td>
+                      <td className="cell-num">0.354</td>
+                      <td className="cell-num">0.038s</td>
                     </tr>
                     <tr>
-                      <td>(M2) Dense + Sparse BM25 Payload</td>
-                      <td>32.6</td>
-                      <td>53.7</td>
-                      <td>60.5</td>
-                      <td>0.412</td>
-                      <td>0.052s</td>
+                      <td className="font-bold text-ink">(M2) Dense + Sparse BM25 Payload</td>
+                      <td className="cell-num">32.6</td>
+                      <td className="cell-num">53.7</td>
+                      <td className="cell-num">60.5</td>
+                      <td className="cell-num">0.412</td>
+                      <td className="cell-num">0.052s</td>
                     </tr>
                     <tr>
-                      <td>(M3) Dense + BM25 + SigLIP Secondary</td>
-                      <td>38.9</td>
-                      <td>58.9</td>
-                      <td>64.7</td>
-                      <td>0.468</td>
-                      <td>0.076s</td>
+                      <td className="font-bold text-ink">(M3) Dense + BM25 + SigLIP Secondary</td>
+                      <td className="cell-num">38.9</td>
+                      <td className="cell-num">58.9</td>
+                      <td className="cell-num">64.7</td>
+                      <td className="cell-num">0.468</td>
+                      <td className="cell-num">0.076s</td>
                     </tr>
                     <tr>
-                      <td>(M4) + 4-Way Weighted RRF Fusion</td>
-                      <td>44.2</td>
-                      <td>64.7</td>
-                      <td>71.6</td>
-                      <td>0.526</td>
-                      <td>0.084s</td>
+                      <td className="font-bold text-ink">(M4) + 4-Way Weighted RRF Fusion</td>
+                      <td className="cell-num">44.2</td>
+                      <td className="cell-num">64.7</td>
+                      <td className="cell-num">71.6</td>
+                      <td className="cell-num">0.526</td>
+                      <td className="cell-num">0.084s</td>
                     </tr>
                     <tr>
-                      <td>(M5) + Temporal Coherence &amp; Diversify</td>
-                      <td>51.6</td>
-                      <td>70.5</td>
-                      <td>77.9</td>
-                      <td>0.598</td>
-                      <td>0.091s</td>
+                      <td className="font-bold text-ink">(M5) + Temporal Coherence &amp; Diversify</td>
+                      <td className="cell-num">51.6</td>
+                      <td className="cell-num">70.5</td>
+                      <td className="cell-num">77.9</td>
+                      <td className="cell-num">0.598</td>
+                      <td className="cell-num">0.091s</td>
                     </tr>
-                    <tr className="bg-cyan-950/20 font-bold text-white">
-                      <td className="text-cyan-300">(M6) + Parallel VLM Rerank (Full Engine)</td>
-                      <td className="text-cyan-300">57.9</td>
-                      <td className="text-cyan-300">74.7</td>
-                      <td className="text-cyan-300">82.1</td>
-                      <td className="text-cyan-300">0.665</td>
-                      <td>1.480s</td>
+                    <tr className="ablation-highlight-row">
+                      <td className="font-black text-plum">(M6) + Parallel VLM Rerank (Full Engine)</td>
+                      <td className="cell-winner">57.9</td>
+                      <td className="cell-winner">74.7</td>
+                      <td className="cell-winner">82.1</td>
+                      <td className="cell-winner">0.665</td>
+                      <td className="cell-num font-bold">1.480s</td>
                     </tr>
-                    <tr className="bg-slate-900/40">
-                      <td colSpan={6} className="font-mono text-xs text-rose-300 font-bold uppercase tracking-wider">
+
+                    <tr className="ablation-section-row">
+                      <td colSpan={6}>
                         Ablation 2: Conversational KIS-C Multi-Turn Dynamics
                       </td>
                     </tr>
                     <tr>
-                      <td>(C1) Turn 1: Initial Vague Query</td>
-                      <td>0.0</td>
-                      <td>35.0 (R@3)</td>
-                      <td>50.0</td>
-                      <td>0.245</td>
-                      <td>0.088s (Amb 0.84)</td>
+                      <td className="font-bold text-ink">(C1) Turn 1: Initial Vague Query</td>
+                      <td className="cell-num">0.0</td>
+                      <td className="cell-num">35.0 (R@3)</td>
+                      <td className="cell-num">50.0</td>
+                      <td className="cell-num">0.245</td>
+                      <td className="cell-num">0.088s (Amb 0.84)</td>
                     </tr>
                     <tr>
-                      <td>(C2) Turn 2: Naive History Concat</td>
-                      <td>25.0</td>
-                      <td>50.0 (R@3)</td>
-                      <td>65.0</td>
-                      <td>0.395</td>
-                      <td>0.092s (Amb 0.74)</td>
+                      <td className="font-bold text-ink">(C2) Turn 2: Naive History Concat</td>
+                      <td className="cell-num">25.0</td>
+                      <td className="cell-num">50.0 (R@3)</td>
+                      <td className="cell-num">65.0</td>
+                      <td className="cell-num">0.395</td>
+                      <td className="cell-num">0.092s (Amb 0.74)</td>
                     </tr>
                     <tr>
-                      <td>(C3) Turn 2: + Entity-Preserving CQR</td>
-                      <td>50.0</td>
-                      <td>70.0 (R@3)</td>
-                      <td>85.0</td>
-                      <td>0.612</td>
-                      <td>0.110s (Amb 0.59)</td>
+                      <td className="font-bold text-ink">(C3) Turn 2: + Entity-Preserving CQR</td>
+                      <td className="cell-num">50.0</td>
+                      <td className="cell-num">70.0 (R@3)</td>
+                      <td className="cell-num">85.0</td>
+                      <td className="cell-num">0.612</td>
+                      <td className="cell-num">0.110s (Amb 0.59)</td>
                     </tr>
                     <tr>
-                      <td>(C4) Turn 2: + Compound N-gram Boost</td>
-                      <td>75.0</td>
-                      <td>90.0 (R@3)</td>
-                      <td>95.0</td>
-                      <td>0.825</td>
-                      <td>0.115s (Amb 0.42)</td>
+                      <td className="font-bold text-ink">(C4) Turn 2: + Compound N-gram Boost</td>
+                      <td className="cell-num">75.0</td>
+                      <td className="cell-num">90.0 (R@3)</td>
+                      <td className="cell-num">95.0</td>
+                      <td className="cell-num">0.825</td>
+                      <td className="cell-num">0.115s (Amb 0.42)</td>
                     </tr>
-                    <tr className="bg-rose-950/20 font-bold text-white">
-                      <td className="text-rose-300">(C5) Turn 3: + Negative Filter &amp; Rocchio</td>
-                      <td className="text-rose-300">85.0</td>
-                      <td className="text-rose-300">95.0 (R@3)</td>
-                      <td className="text-rose-300">100.0</td>
-                      <td className="text-rose-300">0.910</td>
-                      <td>0.120s (Amb 0.24)</td>
+                    <tr className="ablation-highlight-row">
+                      <td className="font-black text-plum">(C5) Turn 3: + Negative Filter &amp; Rocchio</td>
+                      <td className="cell-winner">85.0</td>
+                      <td className="cell-winner">95.0 (R@3)</td>
+                      <td className="cell-winner">100.0</td>
+                      <td className="cell-winner">0.910</td>
+                      <td className="cell-num font-bold">0.120s (Amb 0.24)</td>
                     </tr>
                   </tbody>
                 </table>
@@ -612,13 +654,13 @@ export function App() {
             <div className="paper-panel performance-panel reveal">
               <div className="panel-heading-row">
                 <div>
-                  <span className="eyebrow text-xs text-amber-400 font-mono">TABLE 2</span>
-                  <h3 className="text-base font-bold text-slate-100">Ablation Study 3, 4 &amp; 5: VQA Grounding, Concurrency, and Precision Ladder</h3>
+                  <span className="eyebrow text-xs text-plum font-mono">TABLE 2</span>
+                  <h3 className="text-base sm:text-lg font-black text-ink">Ablation Study 3, 4 &amp; 5: VQA Grounding, Concurrency, and Precision Ladder</h3>
                 </div>
                 <span className="status-chip">Grounded Telemetry</span>
               </div>
               <div className="table-scroll">
-                <table>
+                <table className="paper-table">
                   <thead>
                     <tr>
                       <th>Ablation Dimension &amp; Setting</th>
@@ -629,90 +671,92 @@ export function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="bg-slate-900/40">
-                      <td colSpan={5} className="font-mono text-xs text-amber-300 font-bold uppercase tracking-wider">
+                    <tr className="ablation-section-row">
+                      <td colSpan={5}>
                         Ablation 3: VQA Grounding &amp; Fail-Closed Safety
                       </td>
                     </tr>
                     <tr>
-                      <td>Ungrounded Whole-Frame VLM</td>
-                      <td>Exact Match: 52.0%</td>
-                      <td>58.0%</td>
-                      <td className="text-rose-400 font-bold">42.0% (Hazardous)</td>
-                      <td>1.42s</td>
+                      <td className="font-bold text-ink">Ungrounded Whole-Frame VLM</td>
+                      <td className="cell-num">Exact Match: 52.0%</td>
+                      <td className="cell-num">58.0%</td>
+                      <td className="font-bold text-rose-600">42.0% (Hazardous)</td>
+                      <td className="cell-num">1.42s</td>
                     </tr>
                     <tr>
-                      <td>Locate-and-Crop (YOLOE-26 + VLM)</td>
-                      <td>Exact Match: 83.3%</td>
-                      <td>88.0%</td>
-                      <td>12.0%</td>
-                      <td>1.55s</td>
+                      <td className="font-bold text-ink">Locate-and-Crop (YOLOE-26 + VLM)</td>
+                      <td className="cell-num">Exact Match: 83.3%</td>
+                      <td className="cell-num">88.0%</td>
+                      <td className="cell-num">12.0%</td>
+                      <td className="cell-num">1.55s</td>
                     </tr>
-                    <tr className="bg-emerald-950/20 font-bold text-white">
-                      <td className="text-emerald-300">AEGIS Fail-Closed Grounded Contract</td>
-                      <td className="text-emerald-300">Exact Match: 96.7%</td>
-                      <td className="text-emerald-300">96.7%</td>
-                      <td className="text-emerald-300">0.0% (Zero Error)</td>
-                      <td className="text-emerald-300">1.62s (100% Safe)</td>
+                    <tr className="ablation-highlight-row-emerald">
+                      <td className="font-black text-[#1b6351]">AEGIS Fail-Closed Grounded Contract</td>
+                      <td className="cell-winner-emerald">Exact Match: 96.7%</td>
+                      <td className="cell-winner-emerald">96.7%</td>
+                      <td className="cell-winner-emerald">0.0% (Zero Error)</td>
+                      <td className="cell-winner-emerald">1.62s (100% Safe)</td>
                     </tr>
-                    <tr className="bg-slate-900/40">
-                      <td colSpan={5} className="font-mono text-xs text-cyan-300 font-bold uppercase tracking-wider">
+
+                    <tr className="ablation-section-row">
+                      <td colSpan={5}>
                         Ablation 4: Multi-threaded VLM Concurrency Scaling (Top-10 Scoring)
                       </td>
                     </tr>
                     <tr>
-                      <td>Sequential Execution (N=1 worker)</td>
-                      <td>Throughput: 0.67 QPS</td>
-                      <td>—</td>
-                      <td>—</td>
-                      <td>14.85s (1.0x)</td>
+                      <td className="font-bold text-ink">Sequential Execution (N=1 worker)</td>
+                      <td className="cell-num">Throughput: 0.67 QPS</td>
+                      <td className="cell-num">-</td>
+                      <td className="cell-num">-</td>
+                      <td className="cell-num">14.85s (1.0x)</td>
                     </tr>
                     <tr>
-                      <td>Parallel Execution (N=4 workers)</td>
-                      <td>Throughput: 2.51 QPS</td>
-                      <td>—</td>
-                      <td>—</td>
-                      <td>3.98s (3.73x)</td>
+                      <td className="font-bold text-ink">Parallel Execution (N=4 workers)</td>
+                      <td className="cell-num">Throughput: 2.51 QPS</td>
+                      <td className="cell-num">-</td>
+                      <td className="cell-num">-</td>
+                      <td className="cell-num">3.98s (3.73x)</td>
                     </tr>
-                    <tr className="bg-cyan-950/20 font-bold text-white">
-                      <td className="text-cyan-300">Parallel Execution (N=8 workers)</td>
-                      <td className="text-cyan-300">Throughput: 5.41 QPS</td>
-                      <td>—</td>
-                      <td>—</td>
-                      <td className="text-cyan-300">1.85s (8.03x speedup)</td>
+                    <tr className="ablation-highlight-row">
+                      <td className="font-black text-plum">Parallel Execution (N=8 workers)</td>
+                      <td className="cell-winner">Throughput: 5.41 QPS</td>
+                      <td className="cell-num">-</td>
+                      <td className="cell-num">-</td>
+                      <td className="cell-winner">1.85s (8.03x speedup)</td>
                     </tr>
-                    <tr className="bg-slate-900/40">
-                      <td colSpan={5} className="font-mono text-xs text-plum-300 font-bold uppercase tracking-wider">
+
+                    <tr className="ablation-section-row">
+                      <td colSpan={5}>
                         Ablation 5: Budgeted Precision Ladder (HNSW Effort Scaling)
                       </td>
                     </tr>
                     <tr>
-                      <td>Fast Mode (HNSW ef=64)</td>
-                      <td>Recall vs Exact: 97.8%</td>
-                      <td>Instant Screen</td>
-                      <td>—</td>
-                      <td className="text-emerald-400 font-bold">12.4ms</td>
+                      <td className="font-bold text-ink">Fast Mode (HNSW ef=64)</td>
+                      <td className="cell-num">Recall vs Exact: 97.8%</td>
+                      <td className="cell-num">Instant Screen</td>
+                      <td className="cell-num">-</td>
+                      <td className="font-bold text-[#1b6351]">12.4ms</td>
                     </tr>
                     <tr>
-                      <td>Standard Mode (HNSW ef=256)</td>
-                      <td>Recall vs Exact: 99.4%</td>
-                      <td>Balanced Live</td>
-                      <td>—</td>
-                      <td>24.5ms</td>
+                      <td className="font-bold text-ink">Standard Mode (HNSW ef=256)</td>
+                      <td className="cell-num">Recall vs Exact: 99.4%</td>
+                      <td className="cell-num">Balanced Live</td>
+                      <td className="cell-num">-</td>
+                      <td className="cell-num">24.5ms</td>
                     </tr>
                     <tr>
-                      <td>Deep Mode (HNSW ef=512)</td>
-                      <td>Recall vs Exact: 99.9%</td>
-                      <td>High Ambiguity</td>
-                      <td>—</td>
-                      <td>48.6ms</td>
+                      <td className="font-bold text-ink">Deep Mode (HNSW ef=512)</td>
+                      <td className="cell-num">Recall vs Exact: 99.9%</td>
+                      <td className="cell-num">High Ambiguity</td>
+                      <td className="cell-num">-</td>
+                      <td className="cell-num">48.6ms</td>
                     </tr>
-                    <tr className="bg-slate-800/40 font-bold text-white">
-                      <td>Exact Brute-Force Scan</td>
-                      <td>Recall vs Exact: 100.0%</td>
-                      <td>Deterministic</td>
-                      <td>—</td>
-                      <td>118.5ms</td>
+                    <tr className="ablation-highlight-row">
+                      <td className="font-black text-plum">Exact Brute-Force Scan</td>
+                      <td className="cell-winner">Recall vs Exact: 100.0%</td>
+                      <td className="cell-num">Deterministic</td>
+                      <td className="cell-num">-</td>
+                      <td className="cell-num font-bold">118.5ms</td>
                     </tr>
                   </tbody>
                 </table>
