@@ -50,45 +50,25 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Method A: Trigger via Vercel Deploy Hook (Recommended - Simple & Fast)
       - name: Trigger Vercel Deploy Hook
-        if: env.HAS_DEPLOY_HOOK == 'true'
         env:
-          HAS_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK != '' }}
+          HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
+          if [ -z "$HOOK_URL" ]; then
+            echo "::error::VERCEL_DEPLOY_HOOK secret is not set. Please add it to GitHub Secrets."
+            exit 1
+          fi
           echo "Triggering Vercel Deploy Hook..."
-          curl -s -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}" > /dev/null
-          echo "Vercel Deploy Hook triggered successfully!"
-
-      # Method B: Direct Vercel CLI Deploy (When VERCEL_TOKEN is set)
-      - name: Setup Node.js for Vercel CLI
-        if: env.HAS_VERCEL_TOKEN == 'true' && env.HAS_DEPLOY_HOOK != 'true'
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install Vercel CLI & Deploy
-        if: env.HAS_VERCEL_TOKEN == 'true' && env.HAS_DEPLOY_HOOK != 'true'
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          HAS_VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN != '' }}
-          HAS_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK != '' }}
-        run: |
-          npm install -g vercel@latest
-          npm ci
-          vercel pull --yes --environment=production --token=$VERCEL_TOKEN
-          vercel build --prod --token=$VERCEL_TOKEN
-          vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
-
-      - name: Notice if no Vercel secret configured
-        if: secrets.VERCEL_DEPLOY_HOOK == '' && secrets.VERCEL_TOKEN == ''
-        run: |
-          echo "::notice title=Vercel Auto-Deploy Setup::To enable automatic Vercel deployment on every push from any user, add either 'VERCEL_DEPLOY_HOOK' or ('VERCEL_TOKEN', 'VERCEL_ORG_ID', 'VERCEL_PROJECT_ID') to GitHub Repository Secrets."
+          response=$(curl -s -w "\nHTTP_STATUS:%{http_code}" -X POST "$HOOK_URL")
+          status=$(echo "$response" | grep "HTTP_STATUS" | cut -d: -f2)
+          body=$(echo "$response" | grep -v "HTTP_STATUS")
+          echo "Response Body: $body"
+          if [ "$status" -ge 200 ] && [ "$status" -lt 300 ]; then
+            echo "✅ Vercel Deploy Hook triggered successfully (HTTP $status)!"
+          else
+            echo "::error::Failed to trigger Vercel Deploy Hook (HTTP $status)"
+            exit 1
+          fi
 
   deploy-github-pages:
     name: Deploy to GitHub Pages
