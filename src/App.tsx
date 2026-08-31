@@ -58,30 +58,12 @@ interface NewsItem {
 const newsList: NewsItem[] = [
   {
     date: "29 AUG 2026",
-    tag: "ACCEPTED",
-    tagColor: "emerald",
-    title: "Paper accepted to MMM 2027 (Springer LNCS) as VBS 2027 Extended Demo!",
-    description: "Our paper 'AEGIS: Adaptive Evidence-Grounded Interactive Search for Timed Video Retrieval' has been accepted for presentation and live competition in Siem Reap, Cambodia.",
+    tag: "SUBMITTED",
+    tagColor: "blue",
+    title: "Paper submitted to MMM 2027 (Springer LNCS) as VBS 2027 Extended Demo",
+    description: "Our paper 'AEGIS: Adaptive Evidence-Grounded Interactive Search for Timed Video Retrieval' has been submitted for peer review and live competition demonstration in Siem Reap, Cambodia.",
     link: PAPER_PDF,
     linkLabel: "Read Paper PDF",
-  },
-  {
-    date: "29 AUG 2026",
-    tag: "RELEASE",
-    tagColor: "blue",
-    title: "4-Pillar Decoupled Multimodal Video RAG Benchmark Suite released.",
-    description: "Automated test suite and interactive dashboard released, evaluating Retriever Accuracy, VLM Grounding, Conversational KIS-C Dynamics, and Telemetry.",
-    link: `${VBS_REPO}/blob/main/evaluation/run_rag_benchmark.py`,
-    linkLabel: "View Benchmark Suite",
-  },
-  {
-    date: "28 AUG 2026",
-    tag: "SYSTEM",
-    tagColor: "amber",
-    title: "Peak KIS-C Conversational Engine & WeMM-Embedding-4B integrated.",
-    description: "Achieved multi-turn Recall@1 = 100.0% and MRR = 1.000 using compound n-gram boosting, dynamic ambiguity detection, and conversational negative filtering.",
-    link: `${VBS_REPO}/commit/22f3129`,
-    linkLabel: "View Commit",
   },
 ]
 
@@ -277,12 +259,13 @@ export function App() {
 
           <nav className="main-nav" aria-label="Primary navigation">
             <a href="#abstract">Abstract</a>
+            <a href="#pillars">Pillars</a>
             <a href="#system-flow">System Flow</a>
+            <a href="#topology">Topology</a>
             <a href="#performance">Performance</a>
-            <a href="#pillars">Architecture</a>
+            <a href="#news">News</a>
             <a href="#citation">Citation</a>
           </nav>
-
           <a className="nav-action" href={LIVE_DEMO} target="_blank" rel="noreferrer">
             Live System UI <ArrowUpRight className="icon-small" />
           </a>
@@ -297,7 +280,7 @@ export function App() {
             <div className="hero-copy">
               <div className="acceptance-pill">
                 <Award className="icon-small" />
-                <span>Accepted to MultiMedia Modeling (MMM 2027) · Video Browser Showdown Extended Demo</span>
+                <span>Submitted to MultiMedia Modeling (MMM 2027) · Video Browser Showdown Extended Demo</span>
               </div>
 
               <h1>
@@ -345,63 +328,7 @@ export function App() {
 
           </div>
         </section>
-
-        <section id="system-flow" className="section-anchor flow-section">
-          <div className="container">
-            <div className="section-heading centered reveal">
-              <span className="eyebrow">SYSTEM ARCHITECTURE</span>
-              <h2>AEGIS Live Interactive Architecture Overview</h2>
-              <p>VBS 2027 Competition System Architecture &amp; Execution Pipeline</p>
-            </div>
-
-            {/* Interactive Archify Architecture Diagram */}
-            <div className="architecture-diagram-container reveal mb-10">
-              <div className="diagram-card border border-slate-800 rounded-2xl overflow-hidden bg-[#0A0F1A] shadow-2xl">
-                <div className="diagram-header px-4 py-2.5 bg-[#090D16] border-b border-slate-800/80 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-rmit-red animate-pulse" />
-                    <span className="font-mono text-xs font-bold text-slate-200">INTERACTIVE TOPOLOGY DIAGRAM</span>
-                  </div>
-                  <a
-                    href="/aegis-architecture.html"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs font-mono text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition"
-                  >
-                    <span>Open Fullscreen</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-                <div className="w-full h-[580px] bg-[#070A11]">
-                  <iframe
-                    src="/aegis-architecture.html"
-                    title="AEGIS Architecture Diagram"
-                    className="w-full h-full border-0"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="flow-grid">
-              {architectureStages.map((stage, index) => {
-                const Icon = stage.icon
-                return (
-                  <article key={stage.number} className={`flow-card flow-card-${index + 1} reveal reveal-delay-${Math.min(index + 1, 2)}`}>
-                    <div className="card-corner" aria-hidden="true" />
-                    <div className="flow-card-top">
-                      <span className="stage-number">Stage {stage.number}</span>
-                      <span className="icon-disc"><Icon className="icon-small" /></span>
-                    </div>
-                    <h3>{stage.title}</h3>
-                    <p>{stage.description}</p>
-                    {index < architectureStages.length - 1 && <span className="flow-arrow" aria-hidden="true">→</span>}
-                  </article>
-                )
-              })}
-            </div>
-          </div>
-        </section>
-
+        {/* Abstract Section - Moved directly below Hero */}
         <section id="abstract" className="section-anchor content-section">
           <div className="container content-layout reveal">
             <div className="section-heading side-heading">
@@ -424,6 +351,7 @@ export function App() {
           </div>
         </section>
 
+        {/* Core Methodological Pillars */}
         <section id="pillars" className="section-anchor content-section pillars-section">
           <div className="container">
             <div className="section-heading reveal">
@@ -449,6 +377,74 @@ export function App() {
           </div>
         </section>
 
+        {/* System Flow & Pipeline Stages */}
+        <section id="system-flow" className="section-anchor flow-section">
+          <div className="container">
+            <div className="section-heading centered reveal">
+              <span className="eyebrow">PIPELINE EXECUTION</span>
+              <h2>AEGIS Interactive Retrieval Flow</h2>
+              <p>Four-Stage Decoupled Execution Pipeline for Timed Competition</p>
+            </div>
+
+            <div className="flow-grid">
+              {architectureStages.map((stage, index) => {
+                const Icon = stage.icon
+                return (
+                  <article key={stage.number} className={`flow-card flow-card-${index + 1} reveal reveal-delay-${Math.min(index + 1, 2)}`}>
+                    <div className="card-corner" aria-hidden="true" />
+                    <div className="flow-card-top">
+                      <span className="stage-number">Stage {stage.number}</span>
+                      <span className="icon-disc"><Icon className="icon-small" /></span>
+                    </div>
+                    <h3>{stage.title}</h3>
+                    <p>{stage.description}</p>
+                    {index < architectureStages.length - 1 && <span className="flow-arrow" aria-hidden="true">→</span>}
+                  </article>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Seamless Integrated Topology Diagram */}
+        <section id="topology" className="section-anchor content-section">
+          <div className="container">
+            <div className="section-heading centered reveal">
+              <span className="eyebrow">SYSTEM TOPOLOGY</span>
+              <h2>Interactive Architecture Topology</h2>
+              <p>Explorable Node-by-Node Pipeline &amp; Dataflow Map</p>
+            </div>
+
+            <div className="paper-panel reveal overflow-hidden !p-3 sm:!p-6">
+              <div className="panel-heading-row mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+                  <h3 className="text-sm sm:text-base font-bold text-slate-800">AEGIS Multimodal System Topology</h3>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="status-chip">Interactive Map</span>
+                  <a
+                    href="/aegis-architecture.html"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs font-mono text-plum hover:text-plum-deep flex items-center gap-1 font-bold transition"
+                  >
+                    <span>Full Canvas</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+              <div className="w-full h-[520px] sm:h-[600px] rounded-2xl overflow-hidden border border-plum/15 shadow-inner bg-[#070A11]">
+                <iframe
+                  src="/aegis-architecture.html?theme=dark"
+                  title="AEGIS Multimodal Retrieval Architecture Interactive Topology"
+                  className="w-full h-full border-0"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
         <section className="section-anchor content-section tasks-section">
           <div className="container">
             <div className="section-heading reveal">
@@ -725,12 +721,11 @@ export function App() {
           </div>
         </section>
 
-        <section className="section-anchor content-section news-section">
+        <section id="news" className="section-anchor content-section news-section">
           <div className="container">
             <div className="section-heading centered reveal">
-              <span className="eyebrow">RESEARCH LOG</span>
-              <h2>Latest Research &amp; System News</h2>
-              <p>Chronological Log</p>
+              <span className="eyebrow">UPDATES</span>
+              <h2>News</h2>
             </div>
             <div className="news-timeline">
               {newsList.map((item, index) => (
@@ -769,13 +764,13 @@ export function App() {
                 </button>
               </div>
               <pre>{`@inproceedings{vo2027aegis,
-  author    = {Vo, Long Minh and Vu, Hung Gia and Tran, Danh Kim and Nguyen, Khoa Huynh Minh and Tran, Kien Vi and Chau, Thi-Tuyet-Trang},
+  author    = {Vo, Long Minh and Vu, Gia-Hung and Tran, Danh Kim and Nguyen, Huynh-Minh-Khoa and Tran, Kien Vi and Chau, Thi-Tuyet-Trang},
   title     = {{AEGIS}: Adaptive Evidence-Grounded Interactive Search for Timed Video Retrieval},
   booktitle = {MultiMedia Modeling (MMM 2027)},
   series    = {Lecture Notes in Computer Science},
   publisher = {Springer Nature},
   year      = {2027},
-  note      = {Video Browser Showdown (VBS 2027) Extended Demo}
+  note      = {Submitted to Video Browser Showdown (VBS 2027) Extended Demo}
 }`}</pre>
             </div>
           </div>
