@@ -28,16 +28,16 @@
     ]
   },
   "components": [
-    { "id": "assets", "type": "external", "label": "Video Assets", "sublabel": "V3C / MVK / MSB", "pos": [40, 310], "size": [140, 62] },
-    { "id": "offline_ingest", "type": "cloud", "label": "Multimodal Ingestion", "sublabel": "WeMM-4B + Whisper + OCR", "pos": [300, 310], "size": [160, 62] },
-    { "id": "qdrant_db", "type": "database", "label": "Qdrant Vector DB", "sublabel": "2048d HNSW + text_blob", "pos": [580, 310], "size": [160, 62] },
-    { "id": "operator_ui", "type": "frontend", "label": "Operator Console", "sublabel": "VBS Interactive UI", "pos": [40, 110], "size": [140, 62] },
-    { "id": "query_proc", "type": "backend", "label": "CQR & HyDE Engine", "sublabel": "Ambiguity Detector", "pos": [300, 110], "size": [160, 62] },
-    { "id": "hybrid_engine", "type": "backend", "label": "Hybrid Fast Retrieval", "sublabel": "Weighted RRF + Coherence", "pos": [580, 110], "size": [160, 62] },
-    { "id": "vlm_rerank", "type": "backend", "label": "Parallel VLM Reranker", "sublabel": "8x ThreadPool Rerank", "pos": [860, 110], "size": [160, 62] },
-    { "id": "vqa_guard", "type": "security", "label": "Fail-Closed VQA", "sublabel": "YOLOE-26 Crop + Grounding", "pos": [860, 310], "size": [160, 62] },
-    { "id": "timeline_exp", "type": "backend", "label": "Timeline Explorer", "sublabel": "Sub-shot Reranking", "pos": [1140, 110], "size": [150, 62] },
-    { "id": "dres_server", "type": "external", "label": "DRES Server", "sublabel": "VBS Official Evaluation", "pos": [1140, 310], "size": [150, 62] }
+    { "id": "assets", "type": "external", "label": "Video Assets", "sublabel": "V3C · MVK · MSB", "pos": [40, 310], "size": [150, 64] },
+    { "id": "offline_ingest", "type": "cloud", "label": "Multimodal Ingest", "sublabel": "WeMM-4B + Whisper", "pos": [300, 310], "size": [170, 64] },
+    { "id": "qdrant_db", "type": "database", "label": "Qdrant Vector DB", "sublabel": "2048d HNSW Index", "pos": [580, 310], "size": [170, 64] },
+    { "id": "operator_ui", "type": "frontend", "label": "Operator Console", "sublabel": "VBS Live UI", "pos": [40, 110], "size": [150, 64] },
+    { "id": "query_proc", "type": "backend", "label": "CQR & HyDE Engine", "sublabel": "Ambiguity Detector", "pos": [300, 110], "size": [170, 64] },
+    { "id": "hybrid_engine", "type": "backend", "label": "Hybrid Fast Search", "sublabel": "4-Way Weighted RRF", "pos": [580, 110], "size": [170, 64] },
+    { "id": "vlm_rerank", "type": "backend", "label": "Parallel VLM Rerank", "sublabel": "8x ThreadPool Workers", "pos": [860, 110], "size": [175, 64] },
+    { "id": "vqa_guard", "type": "security", "label": "Fail-Closed VQA", "sublabel": "YOLOE-26 Grounding", "pos": [860, 310], "size": [175, 64] },
+    { "id": "timeline_exp", "type": "backend", "label": "Timeline Explorer", "sublabel": "Sub-shot Reranker", "pos": [1140, 110], "size": [165, 64] },
+    { "id": "dres_server", "type": "external", "label": "DRES Server", "sublabel": "VBS Official Judge", "pos": [1140, 310], "size": [165, 64] }
   ],
   "boundaries": [
     { "kind": "region", "label": "Offline Ingestion Pipeline", "wraps": ["assets", "offline_ingest", "qdrant_db"], "pad": 16 },
