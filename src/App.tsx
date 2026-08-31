@@ -20,7 +20,6 @@ import {
   type LucideIcon,
 } from "lucide-react"
 const VBS_REPO = "https://github.com/mncuchiinhuttt/tgltw-vbs-2027"
-const PROJECT_REPO = "https://github.com/mncuchiinhuttt/tgltw-vbs-2027-project"
 const PAPER_PDF = `${VBS_REPO}/blob/main/paper/main.pdf`
 interface Author {
   name: string
@@ -836,7 +835,6 @@ export function App() {
           </div>
           <div className="footer-links">
             <a href={VBS_REPO} target="_blank" rel="noreferrer">GitHub <ArrowUpRight className="icon-small" /></a>
-            <a href={PROJECT_REPO} target="_blank" rel="noreferrer">Project Page <ExternalLink className="icon-small" /></a>
             <a href="https://videobrowsershowdown.org/" target="_blank" rel="noreferrer">VBS <ExternalLink className="icon-small" /></a>
           </div>
         </div>
