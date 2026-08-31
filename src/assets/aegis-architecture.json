@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "AEGIS Multimodal Video Retrieval Architecture",
+    "output": "public/aegis-architecture.html",
+    "animation": "trace",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "offline-pipeline",
+        "label": "Offline Ingestion Pipeline",
+        "focus": ["assets", "offline_ingest", "qdrant_db"],
+        "note": "WeMM-4B multimodal vectors and text payloads indexed into Qdrant HNSW."
+      },
+      {
+        "id": "online-search",
+        "label": "Online Hybrid Retrieval",
+        "focus": ["operator_ui", "query_proc", "hybrid_engine", "qdrant_db"],
+        "note": "CQR/HyDE query rewriting with weighted RRF and temporal coherence boost."
+      },
+      {
+        "id": "verification-submit",
+        "label": "Verification and Submission",
+        "focus": ["vlm_rerank", "vqa_guard", "timeline_exp", "dres_server"],
+        "note": "Multi-threaded VLM scoring, fail-closed VQA grounding, and DRES delivery."
+      }
+    ]
+  },
+  "components": [
+    { "id": "assets", "type": "external", "label": "Video Assets", "sublabel": "V3C / MVK / MSB", "pos": [40, 310], "size": [140, 62] },
+    { "id": "offline_ingest", "type": "cloud", "label": "Multimodal Ingestion", "sublabel": "WeMM-4B + Whisper + OCR", "pos": [300, 310], "size": [160, 62] },
+    { "id": "qdrant_db", "type": "database", "label": "Qdrant Vector DB", "sublabel": "2048d HNSW + text_blob", "pos": [580, 310], "size": [160, 62] },
+    { "id": "operator_ui", "type": "frontend", "label": "Operator Console", "sublabel": "VBS Interactive UI", "pos": [40, 110], "size": [140, 62] },
+    { "id": "query_proc", "type": "backend", "label": "CQR & HyDE Engine", "sublabel": "Ambiguity Detector", "pos": [300, 110], "size": [160, 62] },
+    { "id": "hybrid_engine", "type": "backend", "label": "Hybrid Fast Retrieval", "sublabel": "Weighted RRF + Coherence", "pos": [580, 110], "size": [160, 62] },
+    { "id": "vlm_rerank", "type": "backend", "label": "Parallel VLM Reranker", "sublabel": "8x ThreadPool Rerank", "pos": [860, 110], "size": [160, 62] },
+    { "id": "vqa_guard", "type": "security", "label": "Fail-Closed VQA", "sublabel": "YOLOE-26 Crop + Grounding", "pos": [860, 310], "size": [160, 62] },
+    { "id": "timeline_exp", "type": "backend", "label": "Timeline Explorer", "sublabel": "Sub-shot Reranking", "pos": [1140, 110], "size": [150, 62] },
+    { "id": "dres_server", "type": "external", "label": "DRES Server", "sublabel": "VBS Official Evaluation", "pos": [1140, 310], "size": [150, 62] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Offline Ingestion Pipeline", "wraps": ["assets", "offline_ingest", "qdrant_db"], "pad": 16 },
+    { "kind": "region", "label": "Online Interactive Search & Orchestration", "wraps": ["operator_ui", "query_proc", "hybrid_engine", "vlm_rerank"], "pad": 16 },
+    { "kind": "region", "label": "Evidence Verification & Evaluation", "wraps": ["vqa_guard", "timeline_exp", "dres_server"], "pad": 16 }
+  ],
+  "connections": [
+    { "from": "assets", "to": "offline_ingest", "label": "keyframes + audio", "variant": "emphasis" },
+    { "from": "offline_ingest", "to": "qdrant_db", "label": "2048d embeddings", "variant": "emphasis" },
+    { "from": "operator_ui", "to": "query_proc", "label": "user query", "variant": "emphasis" },
+    { "from": "query_proc", "to": "hybrid_engine", "label": "rewritten query", "variant": "emphasis" },
+    { "from": "hybrid_engine", "to": "qdrant_db", "label": "HNSW search", "variant": "emphasis", "route": "orthogonal-v" },
+    { "from": "hybrid_engine", "to": "vlm_rerank", "label": "top-20 pool", "variant": "emphasis" },
+    { "from": "vlm_rerank", "to": "vqa_guard", "label": "VQA candidate", "variant": "security", "route": "orthogonal-v" },
+    { "from": "vlm_rerank", "to": "timeline_exp", "label": "confirmed video", "variant": "default" },
+    { "from": "timeline_exp", "to": "dres_server", "label": "timestamp submit", "variant": "emphasis", "route": "orthogonal-v" },
+    { "from": "vqa_guard", "to": "dres_server", "label": "verified answer", "variant": "emphasis" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "High-Capacity Representation",
+      "items": [
+        "Tencent WeMM-Embedding-4B yields unified 2048-dim multimodal vectors",
+        "Qdrant HNSW indexing supports sub-second search across 66k+ vectors",
+        "Full-text text_blob integrates Faster-Whisper ASR, PP-OCRv6, and captions"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Adaptive Live Interaction",
+      "items": [
+        "Entity-preserving CQR and phrase clarification resolve multi-turn ambiguity",
+        "Conversational negative feedback immediately dampens rejected features",
+        "Intra-video timeline exploration allows precise sub-shot timestamp alignment"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Fail-Closed Verification",
+      "items": [
+        "8-way parallelized VLM reranking bounds latency under 2 seconds",
+        "YOLOE-26 localized bounding-box crops ground VQA entity extraction",
+        "Strict fail-closed contract eliminates ungrounded hallucinations (100% safe)"
+      ]
+    }
+  ]
+}

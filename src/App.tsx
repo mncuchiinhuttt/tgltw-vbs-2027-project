@@ -350,9 +350,37 @@ export function App() {
             <div className="section-heading centered reveal">
               <span className="eyebrow">SYSTEM ARCHITECTURE</span>
               <h2>AEGIS Live Interactive Architecture Overview</h2>
-              <p>VBS 2027 Competition System</p>
+              <p>VBS 2027 Competition System Architecture &amp; Execution Pipeline</p>
             </div>
 
+            {/* Interactive Archify Architecture Diagram */}
+            <div className="architecture-diagram-container reveal mb-10">
+              <div className="diagram-card border border-slate-800 rounded-2xl overflow-hidden bg-[#0A0F1A] shadow-2xl">
+                <div className="diagram-header px-4 py-2.5 bg-[#090D16] border-b border-slate-800/80 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rmit-red animate-pulse" />
+                    <span className="font-mono text-xs font-bold text-slate-200">INTERACTIVE TOPOLOGY DIAGRAM</span>
+                  </div>
+                  <a
+                    href="/aegis-architecture.html"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs font-mono text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition"
+                  >
+                    <span>Open Fullscreen</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+                <div className="w-full h-[580px] bg-[#070A11]">
+                  <iframe
+                    src="/aegis-architecture.html"
+                    title="AEGIS Architecture Diagram"
+                    className="w-full h-full border-0"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </div>
             <div className="flow-grid">
               {architectureStages.map((stage, index) => {
                 const Icon = stage.icon
