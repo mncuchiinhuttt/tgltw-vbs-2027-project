@@ -285,7 +285,6 @@ export function App() {
               <a href="#topology">Topology</a>
               <a href="#performance">Performance</a>
               <a href="#news">News</a>
-              <a href="#citation">Citation</a>
             </nav>
             <a className="nav-action" href={PAPER_PDF} target="_blank" rel="noreferrer">
               Paper PDF <ArrowUpRight className="icon-small" />
@@ -795,7 +794,7 @@ export function App() {
           </div>
         </section>
 
-        <section id="citation" className="section-anchor content-section citation-section">
+        <section id="citation" className="section-anchor content-section citation-section" hidden>
           <div className="container">
             <div className="paper-panel citation-panel reveal">
               <div className="panel-heading-row">

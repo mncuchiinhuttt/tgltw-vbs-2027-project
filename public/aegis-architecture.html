@@ -8671,6 +8671,7 @@
         chip.style.removeProperty('top');
         chip.style.removeProperty('left');
         chip.style.removeProperty('right');
+        if (options.preserveView !== true && Archify.view && typeof Archify.view.reset === 'function') {
           Archify.view.reset({ automatic: true });
         }
         if (options.updateUrl !== false) {
