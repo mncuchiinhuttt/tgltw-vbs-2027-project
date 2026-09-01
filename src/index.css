@@ -1489,8 +1489,8 @@ tbody tr:hover td {
   }
 }
 
-#abstract .abstract-panel.is-visible {
-  animation: abstractPanelEnter 900ms cubic-bezier(0.16, 1, 0.3, 1) 120ms forwards;
+#abstract .content-layout.is-visible .abstract-panel {
+  animation: abstractPanelEnter 900ms cubic-bezier(0.16, 1, 0.3, 0.98) 120ms;
 }
 
 #abstract .side-heading.is-visible {
@@ -1826,47 +1826,58 @@ tbody tr:hover td {
 
   .acceptance-pill:hover {
     box-shadow: 0 12px 25px rgba(35, 126, 138, 0.16);
-    transform: perspective(600px) rotateX(-7deg) translateY(-3px) translateZ(12px);
+    transform: translateY(-3px) translateZ(12px);
   }
 
   .action-button:hover {
-    transform: perspective(650px) rotateX(7deg) translateY(-3px) translateZ(9px);
+    transform: translateY(-3px) translateZ(9px);
   }
 
   .abstract-panel {
-    perspective: 1200px;
-    transform-style: preserve-3d;
-    transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 520ms ease;
+    transition: box-shadow 420ms ease, border-color 420ms ease, filter 420ms ease;
   }
 
   .abstract-panel:hover {
-    box-shadow: 0 30px 70px rgba(99, 33, 77, 0.2), 0 8px 0 rgba(143, 45, 104, 0.08);
-    transform: perspective(1400px) translate3d(0, -10px, 32px);
+    border-color: rgba(96, 219, 234, 0.42);
+    box-shadow: 0 18px 45px rgba(99, 33, 77, 0.14), 0 0 0 1px rgba(96, 219, 234, 0.12), inset 0 0 45px rgba(96, 219, 234, 0.06);
+    filter: saturate(1.08);
   }
 
   .abstract-panel p {
-    transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color 360ms ease, text-shadow 360ms ease, filter 360ms ease;
   }
 
   .abstract-panel:hover p:nth-child(1) {
-    transform: translateZ(22px);
+    text-shadow: none;
+    filter: none;
   }
 
   .abstract-panel:hover p:nth-child(2) {
-    transform: translateZ(15px);
+    color: #6f5168;
+    text-shadow: 1px 0 rgba(96, 219, 234, 0.18);
   }
 
   .abstract-panel:hover p:nth-child(3) {
-    transform: translateZ(9px);
+    text-shadow: none;
   }
 
   .abstract-panel::before {
-    transform-origin: center;
-    transition: transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 0;
+    left: 0;
+    width: 7px;
+    opacity: 1;
+    transform: none;
+    transition: filter 420ms ease;
+    will-change: left, opacity;
   }
 
   .abstract-panel:hover::before {
-    transform: translateZ(18px) scaleY(1.04);
+    animation: abstractHorizontalScan 2.1s linear 1 both;
+    filter: drop-shadow(0 0 5px rgba(96, 219, 234, 0.5));
+  }
+
+  .abstract-panel p {
+    z-index: 1;
   }
 
   .pillar-card {
@@ -1940,6 +1951,10 @@ tbody tr:hover td {
     transform: translate3d(4px, -3px, 22px) rotateY(-18deg);
   }
 
+  .flow-card:hover .flow-arrow {
+    animation: dataPacketGlow 900ms ease-out 1;
+  }
+
   .topology-panel-motion {
     perspective: 1500px;
     transform-style: preserve-3d;
@@ -1978,6 +1993,17 @@ tbody tr:hover td {
   .task-card-v2:hover {
     box-shadow: 0 30px 64px rgba(99, 33, 77, 0.2), 0 8px 0 rgba(143, 45, 104, 0.07);
     transform: perspective(1300px) translate3d(0, -9px, 24px);
+    z-index: 2;
+  }
+
+  .task-grid-bento {
+    perspective: 1800px;
+  }
+
+  .task-grid-bento:has(.task-card-v2:hover) > .task-card-v2:not(:hover) {
+    filter: saturate(0.84);
+    opacity: 0.88;
+    transform: translateZ(-16px) scale(0.985);
   }
 
   .task-v2-icon-disc,
@@ -2021,6 +2047,20 @@ tbody tr:hover td {
     transform: translateZ(30px) scale(1.08);
   }
 
+  .performance-panel-motion .paper-table {
+    transform-style: preserve-3d;
+    transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .performance-panel-motion:hover .paper-table {
+    transform: translateZ(8px);
+  }
+
+  .ablation-highlight-row:hover td,
+  .ablation-highlight-row-emerald:hover td {
+    animation: metricScan 900ms ease-out 1;
+  }
+
   tbody tr {
     transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), background 220ms ease;
   }
@@ -2060,12 +2100,74 @@ tbody tr:hover td {
   }
 }
 
+.ablation-highlight-row td,
+.ablation-highlight-row-emerald td {
+  background-image: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.48) 48%,
+    transparent 61%,
+    transparent 100%
+  );
+  background-size: 260% 100%;
+}
+
+.news-timeline::before {
+  background-size: 100% 240%;
+}
+
 @keyframes aegisSparkDepth {
   0%, 100% {
     transform: rotate(45deg) translate3d(0, 0, 0) scale(1);
   }
   50% {
     transform: rotate(135deg) translate3d(8px, -5px, 0) scale(1.18);
+  }
+}
+
+@keyframes dataPacketGlow {
+  0%, 100% {
+    color: var(--plum);
+    text-shadow: 0 0 0 rgba(143, 45, 104, 0);
+  }
+  45% {
+    color: var(--cyan);
+    text-shadow: 0 0 8px rgba(96, 219, 234, 0.85), 0 0 18px rgba(96, 219, 234, 0.35);
+  }
+  65% {
+    color: var(--plum-deep);
+    text-shadow: 0 0 5px rgba(143, 45, 104, 0.6);
+  }
+}
+
+@keyframes abstractHorizontalScan {
+  0%, 8% {
+    opacity: 0;
+    left: -7px;
+  }
+  18% {
+    opacity: 0.95;
+  }
+  82% {
+    opacity: 0.95;
+    left: calc(100% - 7px);
+  }
+  92%, 100% {
+    opacity: 0;
+    left: 100%;
+  }
+}
+
+@keyframes metricScan {
+  0%, 18% {
+    background-position: 140% 0;
+  }
+  48%, 62% {
+    background-position: -40% 0;
+  }
+  100% {
+    background-position: -40% 0;
   }
 }
 
