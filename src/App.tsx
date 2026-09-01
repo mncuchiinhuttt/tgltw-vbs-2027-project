@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState, type MouseEvent } from "react"
 import {
   Activity,
   ArrowUpRight,
@@ -244,6 +244,14 @@ export function App() {
   const [copied, setCopied] = useState(false)
   useRevealOnScroll()
 
+  const handleSectionNavigation = useCallback(
+    (event: MouseEvent<HTMLAnchorElement>, id: string) => {
+      event.preventDefault()
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
+    },
+    [],
+  )
+
   const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
@@ -279,18 +287,18 @@ export function App() {
       <header className={`topbar-wrapper ${isScrolled ? "is-scrolled" : ""}`}>
         <div className="topbar-container">
           <div className="topbar-inner">
-            <a className="brand" href="#top" aria-label="AEGIS home">
+            <a className="brand" href="#top" aria-label="AEGIS home" onClick={(event) => handleSectionNavigation(event, "top")}>
               <span className="brand-mark" aria-hidden="true"><span /></span>
               <span>AEGIS</span>
             </a>
 
             <nav className="main-nav" aria-label="Primary navigation">
-              <a href="#abstract">Abstract</a>
-              <a href="#pillars">Pillars</a>
-              <a href="#system-flow">System Flow</a>
-              <a href="#topology">Topology</a>
-              <a href="#performance">Performance</a>
-              <a href="#news">News</a>
+              <a href="#abstract" onClick={(event) => handleSectionNavigation(event, "abstract")}>Abstract</a>
+              <a href="#pillars" onClick={(event) => handleSectionNavigation(event, "pillars")}>Pillars</a>
+              <a href="#system-flow" onClick={(event) => handleSectionNavigation(event, "system-flow")}>System Flow</a>
+              <a href="#topology" onClick={(event) => handleSectionNavigation(event, "topology")}>Topology</a>
+              <a href="#performance" onClick={(event) => handleSectionNavigation(event, "performance")}>Performance</a>
+              <a href="#news" onClick={(event) => handleSectionNavigation(event, "news")}>News</a>
             </nav>
             <a className="nav-action" href={PAPER_PDF} target="_blank" rel="noreferrer">
               Paper PDF <ArrowUpRight className="icon-small" />
