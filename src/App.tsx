@@ -297,6 +297,7 @@ export function App() {
               <a href="#pillars" onClick={(event) => handleSectionNavigation(event, "pillars")}>Pillars</a>
               <a href="#system-flow" onClick={(event) => handleSectionNavigation(event, "system-flow")}>System Flow</a>
               <a href="#topology" onClick={(event) => handleSectionNavigation(event, "topology")}>Topology</a>
+              <a href="#tasks" onClick={(event) => handleSectionNavigation(event, "tasks")}>Task Modes</a>
               <a href="#performance" onClick={(event) => handleSectionNavigation(event, "performance")}>Performance</a>
               <a href="#news" onClick={(event) => handleSectionNavigation(event, "news")}>News</a>
             </nav>
@@ -311,7 +312,7 @@ export function App() {
           <div className="container hero-panel reveal is-visible">
             <div className="hero-spark hero-spark-one" />
             <div className="hero-spark hero-spark-two" />
-            <div className="hero-copy">
+              <div className="hero-copy">
               <div className="acceptance-pill">
                 <Award className="icon-small" />
                 <span>Submitted to MultiMedia Modeling (MMM 2027) · Video Browser Showdown Extended Demo</span>
@@ -443,7 +444,7 @@ export function App() {
               <p>Interactive System Topology · Explorable Node-by-Node Pipeline &amp; Dataflow Map</p>
             </div>
 
-            <div className="paper-panel reveal overflow-hidden !p-3 sm:!p-6">
+            <div className="paper-panel reveal overflow-hidden !p-3 sm:!p-6 topology-panel-motion">
               <div className="panel-heading-row mb-3">
                 <div className="flex items-center gap-2.5">
                   <span className="w-3 h-3 rounded-full bg-plum animate-pulse" />
@@ -539,7 +540,7 @@ export function App() {
             </div>
 
             {/* Table 1: Ablation Study 1 & 2 */}
-            <div className="paper-panel performance-panel reveal mb-8">
+            <div className="paper-panel performance-panel reveal mb-8 performance-panel-motion">
               <div className="panel-heading-row">
                 <div>
                   <span className="eyebrow text-xs text-plum font-mono">TABLE 1</span>
@@ -665,7 +666,7 @@ export function App() {
             </div>
 
             {/* Table 2: Ablation Study 3, 4 & 5 */}
-            <div className="paper-panel performance-panel reveal">
+            <div className="paper-panel performance-panel reveal performance-panel-motion">
               <div className="panel-heading-row">
                 <div>
                   <span className="eyebrow text-xs text-plum font-mono">TABLE 2</span>
@@ -789,7 +790,7 @@ export function App() {
               {newsList.map((item, index) => (
                 <article key={item.title} className={`news-item news-item-${index % 2 === 0 ? "left" : "right"} reveal`}>
                   <span className={`news-node ${item.tagColor}`} aria-hidden="true" />
-                  <div className="news-card">
+                  <div className="news-card news-card-motion">
                     <div className="news-meta">
                       <span className={tagClass(item.tagColor)}>{item.tag}</span>
                       <span>{item.date}</span>
