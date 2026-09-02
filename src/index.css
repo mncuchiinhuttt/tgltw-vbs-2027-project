@@ -689,8 +689,8 @@ main {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 7px;
-  background: linear-gradient(var(--pink-strong), var(--cyan));
+  width: 100%;
+  background: linear-gradient(var(--pink-strong), var(--cyan)) 0 0 / 7px 100% no-repeat;
   content: "";
 }
 
@@ -1818,6 +1818,10 @@ tbody tr:hover td {
   }
 }
 
+.abstract-panel.is-scanning::before {
+  animation: abstractHorizontalScan 2.1s linear 1 both;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .acceptance-pill {
     transform-style: preserve-3d;
@@ -1864,15 +1868,13 @@ tbody tr:hover td {
   .abstract-panel::before {
     z-index: 0;
     left: 0;
-    width: 7px;
+    width: 100%;
     opacity: 1;
-    transform: none;
+    transform: translate3d(0, 0, 0);
     transition: filter 420ms ease;
-    will-change: left, opacity;
   }
 
   .abstract-panel:hover::before {
-    animation: abstractHorizontalScan 2.1s linear 1 both;
     filter: drop-shadow(0 0 5px rgba(96, 219, 234, 0.5));
   }
 
@@ -2142,20 +2144,21 @@ tbody tr:hover td {
 }
 
 @keyframes abstractHorizontalScan {
-  0%, 8% {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  78% {
+    opacity: 1;
+    transform: translate3d(calc(100% - 7px), 0, 0);
+  }
+  86% {
     opacity: 0;
-    left: -7px;
+    transform: translate3d(calc(100% - 7px), 0, 0);
   }
-  18% {
-    opacity: 0.95;
-  }
-  82% {
-    opacity: 0.95;
-    left: calc(100% - 7px);
-  }
-  92%, 100% {
+  100% {
     opacity: 0;
-    left: 100%;
+    transform: translate3d(0, 0, 0);
   }
 }
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type MouseEvent } from "react"
+import { useCallback, useEffect, useState, type AnimationEvent as ReactAnimationEvent, type MouseEvent, type PointerEvent as ReactPointerEvent } from "react"
 import {
   Activity,
   ArrowUpRight,
@@ -252,6 +252,19 @@ export function App() {
     [],
   )
 
+  const handleAbstractPointerEnter = useCallback((event: ReactPointerEvent<HTMLElement>) => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+    const element = event.currentTarget
+    if (element.classList.contains("is-scanning")) return
+    element.classList.add("is-scanning")
+  }, [])
+
+  const handleAbstractAnimationEnd = useCallback((event: ReactAnimationEvent<HTMLElement>) => {
+    if (event.animationName !== "abstractHorizontalScan") return
+    const element = event.currentTarget
+    element.classList.remove("is-scanning")
+  }, [])
+
   const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
@@ -366,7 +379,11 @@ export function App() {
               <div className="side-rule" />
               <span className="side-caption">AEGIS · TGLTW-RMIT · VBS 2027</span>
             </div>
-            <article className="paper-panel abstract-panel">
+            <article
+              className="paper-panel abstract-panel"
+              onAnimationEnd={handleAbstractAnimationEnd}
+              onPointerEnter={handleAbstractPointerEnter}
+            >
               <p className="abstract-lead">
                 Interactive video retrieval in timed competition environments presents severe trade-offs between retrieval latency, semantic coverage, and answer faithfulness. In this paper, we present <strong>AEGIS</strong> (<strong>A</strong>daptive <strong>E</strong>vidence-<strong>G</strong>rounded <strong>I</strong>nteractive <strong>S</strong>earch), a live-first multimodal video retrieval system developed by team <strong>TGLTW-RMIT</strong> for the Video Browser Showdown (VBS 2027).
               </p>
