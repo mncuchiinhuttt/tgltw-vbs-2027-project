@@ -2064,11 +2064,7 @@ tbody tr:hover td {
   }
 
   tbody tr {
-    transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), background 220ms ease;
-  }
-
-  tbody tr:hover {
-    transform: translateX(4px) translateZ(4px);
+    transition: background-color 220ms ease;
   }
 
   .news-card-motion {
