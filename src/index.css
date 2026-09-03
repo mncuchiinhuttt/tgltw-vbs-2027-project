@@ -537,6 +537,7 @@ main {
   background: var(--pink-strong);
   opacity: 0.74;
   transform: rotate(15deg);
+  pointer-events: none;
 }
 
 .flow-card-2 .card-corner {
@@ -1912,14 +1913,12 @@ tbody tr:hover td {
   }
 
   .flow-card {
-    perspective: 1100px;
-    transform-style: preserve-3d;
     transition: transform 440ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 440ms ease;
   }
 
   .flow-card:hover {
     box-shadow: 0 30px 62px rgba(99, 33, 77, 0.2), 0 8px 0 rgba(143, 45, 104, 0.07);
-    transform: perspective(1250px) translate3d(0, -10px, 25px);
+    transform: translateY(-10px);
   }
 
   .flow-card h3,
@@ -1928,19 +1927,19 @@ tbody tr:hover td {
   }
 
   .flow-card:hover h3 {
-    transform: translateZ(24px);
+    transform: translateY(-2px);
   }
 
   .flow-card:hover p {
-    transform: translateZ(12px);
+    transform: translateY(-1px);
   }
 
   .flow-card .card-corner {
-    transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 440ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .flow-card:hover .card-corner {
-    transform: translate3d(0, 0, 18px) rotate(24deg) scale(1.08);
+    transform: rotate(24deg) scale(1.08);
   }
 
   .flow-arrow {
