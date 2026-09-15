@@ -1181,6 +1181,345 @@ tbody tr:hover td {
   background: rgba(250, 216, 235, 0.22);
 }
 
+/* ==========================================================================
+   Key Performance Indicators (KPI) Summary Grid
+   ========================================================================== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.kpi-card {
+  position: relative;
+  background: rgba(255, 248, 251, 0.95);
+  border: 1px solid rgba(143, 45, 104, 0.16);
+  border-radius: 20px;
+  padding: 18px 16px;
+  box-shadow: 0 8px 24px rgba(142, 77, 122, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
+  overflow: hidden;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(142, 77, 122, 0.14);
+  border-color: rgba(143, 45, 104, 0.3);
+}
+
+.kpi-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--plum);
+  opacity: 0.8;
+}
+
+.kpi-card.kpi-accent-emerald::before {
+  background: #1b6351;
+}
+
+.kpi-card.kpi-accent-cyan::before {
+  background: #0284c7;
+}
+
+.kpi-card.kpi-accent-plum::before {
+  background: var(--plum);
+}
+
+.kpi-label {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kpi-value {
+  font-family: "Avenir Next", "Trebuchet MS", sans-serif;
+  font-size: clamp(24px, 3.2vw, 30px);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  margin-bottom: 6px;
+}
+
+.kpi-card.kpi-accent-emerald .kpi-value {
+  color: #1b6351;
+}
+
+.kpi-card.kpi-accent-plum .kpi-value {
+  color: var(--plum);
+}
+
+.kpi-sub {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.35;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   Supplementary Material Download Banner & Layout
+   ========================================================================== */
+.supplementary-section {
+  padding-top: 45px;
+}
+
+.download-banner {
+  background: linear-gradient(135deg, rgba(255, 248, 251, 0.98), rgba(249, 231, 241, 0.85));
+  border: 1px solid rgba(143, 45, 104, 0.22);
+  border-radius: 24px;
+  padding: 28px 32px;
+  box-shadow: 0 16px 45px rgba(142, 77, 122, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.download-banner::after {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(143, 45, 104, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.download-banner-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.download-banner-title h3 {
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 900;
+  color: var(--ink);
+  margin: 0 0 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.download-banner-title p {
+  font-size: 13.5px;
+  color: var(--muted);
+  margin: 0;
+  max-width: 760px;
+  line-height: 1.5;
+}
+
+.download-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-download-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--plum);
+  color: #fff !important;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 12px 22px;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(143, 45, 104, 0.35);
+  transition: all 200ms ease;
+}
+
+.btn-download-primary:hover {
+  background: var(--plum-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(143, 45, 104, 0.45);
+}
+
+.btn-download-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--plum) !important;
+  border: 1px solid rgba(143, 45, 104, 0.25);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 12px 20px;
+  border-radius: 999px;
+  transition: all 200ms ease;
+}
+
+.btn-download-secondary:hover {
+  background: rgba(250, 216, 235, 0.3);
+  border-color: var(--plum);
+  transform: translateY(-1px);
+}
+
+/* Supplementary Tables & Term Badges */
+.supp-term-code {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--plum-deep);
+  background: rgba(250, 216, 235, 0.4);
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(143, 45, 104, 0.15);
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.supp-category-pill {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(96, 219, 234, 0.15);
+  color: #0369a1;
+  border: 1px solid rgba(96, 219, 234, 0.35);
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.supp-category-pill-emerald {
+  background: rgba(71, 203, 161, 0.12);
+  color: #1b6351;
+  border-color: rgba(71, 203, 161, 0.3);
+}
+
+.supp-category-pill-plum {
+  background: rgba(143, 45, 104, 0.1);
+  color: var(--plum);
+  border-color: rgba(143, 45, 104, 0.22);
+}
+
+.supp-desc-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.supp-formula-code {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  color: var(--plum-deep);
+  border: 1px solid rgba(143, 45, 104, 0.12);
+}
+
+/* Qualitative Demonstration Panel */
+.demo-showcase-panel {
+  background: rgba(255, 248, 251, 0.95);
+  border: 1px solid rgba(143, 45, 104, 0.18);
+  border-radius: 28px;
+  padding: 24px;
+  box-shadow: 0 16px 45px rgba(142, 77, 122, 0.1);
+  margin-top: 28px;
+}
+
+.demo-image-frame {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(143, 45, 104, 0.16);
+  background: #110d13;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.demo-image-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.demo-caption-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.demo-caption-pill {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(143, 45, 104, 0.12);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.demo-caption-pill strong {
+  color: var(--plum-deep);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.invariants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.invariant-card {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(143, 45, 104, 0.14);
+  border-radius: 16px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.invariant-card-title {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--plum-deep);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.invariant-card-desc {
+  font-size: 12.5px;
+  color: var(--ink);
+  line-height: 1.45;
+  margin: 0;
+}
+
 .news-section {
   padding-top: 45px;
 }
@@ -1731,6 +2070,37 @@ tbody tr:hover td {
   .paper-table td {
     padding-inline: 5px;
     font-size: 9px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .download-banner {
+    padding: 22px 18px;
+    border-radius: 20px;
+  }
+
+  .download-banner-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .btn-download-primary,
+  .btn-download-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .demo-showcase-panel {
+    padding: 16px 12px;
+    border-radius: 20px;
+  }
+
+  .demo-caption-grid,
+  .invariants-grid {
+    grid-template-columns: 1fr;
   }
 
   .panel-heading-row {
