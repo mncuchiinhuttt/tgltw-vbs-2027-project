@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState, type AnimationEvent as ReactAnimationEvent, type MouseEvent, type PointerEvent as ReactPointerEvent } from "react"
 import {
-  Activity,
   ArrowUpRight,
   Award,
   BookOpen,
@@ -20,13 +19,13 @@ import {
   Search,
   ShieldCheck,
   Sliders,
-  Sparkles,
   type LucideIcon,
 } from "lucide-react"
 
-const VBS_REPO = "https://github.com/mncuchiinhuttt/tgltw-vbs-2027"
 const PAPER_PDF = "/paper.pdf"
+const SHOW_BIBTEX_CITATION = false
 const SUPP_PDF = "/supplementary_metrics.pdf"
+const SOURCE_REPOSITORY_URL = "https://github.com/mncuchiinhuttt/aegis-vbs-2027"
 
 interface Author {
   name: string
@@ -61,22 +60,22 @@ interface NewsItem {
 
 const newsList: NewsItem[] = [
   {
-    date: "14 SEP 2026",
-    tag: "BENCHMARK",
-    tagColor: "emerald",
-    title: "1,000-Query Benchmark & Supplementary Technical Appendix Released",
-    description: "Completed comprehensive 1,000-query corpus stress test across all 5 official VBS task families (Recall@1 70.4%, Recall@5 76.0%, MRR 0.729, 0% hallucination). Published official Technical Appendix detailing 12 evaluation metrics and 10 system techniques.",
-    link: SUPP_PDF,
-    linkLabel: "Download Supplementary PDF",
-  },
-  {
-    date: "29 AUG 2026",
+    date: "21 SEP 2026",
     tag: "SUBMITTED",
     tagColor: "blue",
     title: "Paper submitted to MMM 2027 (Springer LNCS) as VBS 2027 Extended Demo",
     description: "Our paper 'Adaptive, Evidence-Grounded Interactive Search for Video Moment Retrieval' has been submitted for peer review and live competition demonstration in Siem Reap, Cambodia.",
     link: PAPER_PDF,
-    linkLabel: "Read Paper PDF",
+    linkLabel: "Camera-ready paper PDF",
+  },
+  {
+    date: "14 SEP 2026",
+    tag: "ARCHIVE",
+    tagColor: "amber",
+    title: "Archived retrieval diagnostic (historical scope only)",
+    description: "Earlier retrieval diagnostic only: Recall@1 70.4%, Recall@5 76.0%, and MRR 0.7289. The linked archive documents source provenance and limitations; these values do not validate the current pipeline, whose production evaluation is unmeasured.",
+    link: "/artifacts/archived-retrieval-diagnostics.json",
+    linkLabel: "Archived data and limitations",
   },
   {
     date: "15 MAY 2026",
@@ -98,25 +97,25 @@ const architectureStages: ArchitectureStage[] = [
   {
     number: "01",
     title: "Offline Ingestion",
-    description: "Tencent WeMM-Embedding-4B (2048d MRL), PP-OCRv6, faster-whisper ASR, YOLOE-26 BBoxes into Qdrant HNSW.",
+    description: "Tencent WeMM native embeddings with checkpoint-supported optional MRL, plus OCR/ASR and configured visual processing, indexed in Qdrant.",
     icon: Database,
   },
   {
     number: "02",
-    title: "Hybrid Fast Search",
-    description: "4-Way Weighted RRF fusion over WeMM dense vectors, payload text BM25, and temporal coherence boost.",
-    icon: Activity,
+    title: "Hybrid Retrieval",
+    description: "Weighted nested RRF combines dense retrieval with Qdrant MatchText over text_blob; weights default to uniform and SigLIP is optional.",
+    icon: Search,
   },
   {
     number: "03",
-    title: "Peak KIS-C & VQA",
-    description: "Multi-turn entity CQR, N-gram phrase boosting, negative feedback filter, and 8x parallel fail-closed VQA.",
+    title: "KIS-C & Evidence-Linked VQA",
+    description: "Conversational query handling and bounded parallel VQA for API clients that declare concurrency support; other clients run serially.",
     icon: MessageSquare,
   },
   {
     number: "04",
     title: "Intra-Video Exploration",
-    description: "Sub-shot reranker and +-30s timeline drill-down enabling instant 1-click DRES server submission.",
+    description: "Intra-video browsing and refinement for inspecting candidate moments; current timing and retrieval outcomes are unmeasured.",
     icon: Sliders,
   },
 ]
@@ -134,32 +133,32 @@ const pillars: Pillar[] = [
   {
     number: "01",
     title: "Tencent WeMM-Embedding-4B",
-    description: "4-billion-parameter foundation multimodal embedder providing unified representations for text and keyframes. Matryoshka Representation Learning (MRL) standardizes vectors to 2,048 dimensions for Qdrant HNSW indexing.",
-    metric: "Dimensionality: 2048d · Fast HNSW: 12.4ms",
+    description: "Tencent WeMM-Embedding-4B uses its native output dimensions; MRL truncation is limited to dimensions supported by the configured checkpoint.",
+    metric: "Current retrieval latency: not measured",
     icon: Database,
     tone: "cyan",
   },
   {
     number: "02",
-    title: "Peak Conversational KIS-C",
-    description: "Entity-preserving CQR paired with dynamic ambiguity detection (DVR + SMA), compound n-gram phrase clarification boosting, and negative feedback filtering. Converts vague queries to Rank #1 hits.",
-    metric: "Recall@1: 94.5% · MRR: 0.945 · Ambiguity: 0.61 → 0.22",
+    title: "Conversational KIS-C",
+    description: "Entity-preserving conversational query handling, ambiguity checks, phrase clarification, and negative feedback support interactive search; current task-family results are unmeasured.",
+    metric: "Current benchmark results: not measured",
     icon: MessageSquare,
     tone: "pink",
   },
   {
     number: "03",
     title: "Fail-Closed Grounded VQA",
-    description: "Physical keyframe resolution with YOLOE-26 bounding-box crops. An 8x parallel ThreadPool evaluates candidates in 1.85s with a strict fail-closed contract ensuring zero hallucination.",
-    metric: "Exact Match: 83.3% · Safety Rate: 100.0% · Hallucination: 0.0%",
+    description: "VQA responses are linked to resolved candidate-frame evidence and abstain when media or a valid grounded response is unavailable. Evidence linkage is not a guarantee of answer correctness.",
+    metric: "Production VQA metrics: not measured",
     icon: ShieldCheck,
     tone: "yellow",
   },
   {
     number: "04",
     title: "Intra-Video Timeline Explorer",
-    description: "Enables operators to inspect surrounding keyframes (±30s) and execute sub-shot text reranking directly inside a confirmed video, pinpointing target frames in seconds.",
-    metric: "Sub-shot Reranker API · 1-Click DRES Submit",
+    description: "Lets operators inspect neighboring keyframes and refine a search within a selected video; no current latency or precision result is reported.",
+    metric: "Current timing: not measured",
     icon: Sliders,
     tone: "plum",
   },
@@ -171,7 +170,6 @@ interface TaskDefinition {
   title: string
   description: string
   flow: string[]
-  highlight?: string
   tone: "pink" | "plum" | "emerald" | "cyan" | "yellow"
   icon: LucideIcon
 }
@@ -181,9 +179,8 @@ const tasks: TaskDefinition[] = [
     code: "KIS-T",
     type: "Textual Known-Item",
     title: "Translate memory into a target frame.",
-    description: "4-Way RRF fusion over Tencent WeMM-Embedding-4B dense vectors and BM25 payload text, followed by parallelized VLM verification.",
-    flow: ["Text Query", "WeMM Dense + BM25", "4-Way RRF", "VLM Rerank"],
-    highlight: "Recall@1: 68.0% · Recall@20: 82.3%",
+    description: "Weighted nested RRF combines WeMM dense retrieval and Qdrant MatchText over text_blob; fusion weights default to uniform, with optional SigLIP retrieval.",
+    flow: ["Text Query", "WeMM Dense + MatchText", "Nested Weighted RRF", "VLM Rerank"],
     tone: "pink",
     icon: Search,
   },
@@ -191,169 +188,43 @@ const tasks: TaskDefinition[] = [
     code: "KIS-C",
     type: "Conversational Search",
     title: "Disambiguate visual candidate pools.",
-    description: "Entity-preserving CQR paired with dynamic ambiguity detection (DVR + SMA), compound n-gram boosting, and negative feedback filtering.",
-    flow: ["Multi-turn CQR", "Ambiguity Check", "N-gram Boost", "Negative Filter"],
-    highlight: "Turn 3 R@1: 94.5% · MRR: 0.945",
+    description: "Entity-preserving query handling, ambiguity checks, phrase clarification, and negative feedback support follow-up search.",
+    flow: ["Conversation Context", "Query Handling", "Clarification", "Feedback"],
     tone: "plum",
     icon: MessageSquare,
   },
   {
     code: "VQA",
     type: "Grounded Visual QA",
-    title: "Answer strictly from physical video evidence.",
-    description: "Real keyframe resolution inside dataset root, YOLOE-26 bounding-box cropping, and a strict fail-closed contract that yields UNKNOWN on missing media.",
-    flow: ["Question", "Evidence Frame", "YOLOE Crop", "Fail-Closed VLM"],
-    highlight: "Exact Match: 83.3% · 0% Hallucination",
+    title: "Answer from linked video evidence or abstain.",
+    description: "Each candidate is resolved to its media evidence; missing media or an invalid grounded response yields an abstention. Evidence linkage does not guarantee correctness.",
+    flow: ["Question", "Resolved Frame", "Optional Crop", "Answer or Abstain"],
     tone: "emerald",
     icon: ShieldCheck,
   },
   {
     code: "AVS",
     type: "Ad-hoc Video Search",
-    title: "Maximize semantic diversity across videos.",
-    description: "Broad multimodal retrieval combined with soft duplicate-video guards to prevent repetitive single-video submissions to DRES judges.",
-    flow: ["Broad Concept", "Cross-Video Diversity", "Timeline Browse", "DRES Batch"],
-    highlight: "Recall@20: 84.8% · 8.6 Videos/Query",
+    title: "Explore a diverse set of candidate moments.",
+    description: "Candidate results can be diversified by scene for operator browsing; current AVS retrieval performance has not been measured.",
+    flow: ["Broad Query", "Fused Candidates", "Scene Diversification", "Operator Browse"],
     tone: "cyan",
     icon: Layers,
   },
   {
     code: "KIS-V",
     type: "Visual Query Search",
-    title: "Match targets from visual video prompts.",
-    description: "Representative multi-point clip sampling (up to 8 frames) embedded via WeMM-4B and parallel-searched across Qdrant point indices.",
-    flow: ["Visual Clip", "8-Frame Sampling", "WeMM-4B Search", "Point Merge"],
-    highlight: "Recall@1: 88.0% · Recall@5: 96.0%",
+    title: "Search with a visual example.",
+    description: "A supplied query image can be embedded with the primary WeMM model and searched against compatible visual vectors.",
+    flow: ["Query Image", "WeMM Image Embedding", "Vector Search", "Candidate Browse"],
     tone: "yellow",
     icon: Film,
   },
 ]
 
-interface KpiStat {
-  label: string
-  value: string
-  sub: string
-  accent?: "plum" | "emerald" | "cyan"
-}
 
-const kpiStats: KpiStat[] = [
-  {
-    label: "Overall RAG Score",
-    value: "77.5",
-    sub: "/ 100.0 (94.7 in core competition)",
-    accent: "plum",
-  },
-  {
-    label: "Recall@1 (1,000 Q)",
-    value: "70.40%",
-    sub: "704 / 1,000 top-1 correct hits",
-    accent: "plum",
-  },
-  {
-    label: "Recall@5 Coverage",
-    value: "76.00%",
-    sub: "760 / 1,000 in top-5 candidate pool",
-  },
-  {
-    label: "Mean Recip. Rank",
-    value: "0.7289",
-    sub: "MRR across 5 official task families",
-  },
-  {
-    label: "Grounded VQA Exact",
-    value: "83.33%",
-    sub: "145 / 174 answered, 0% hallucination",
-    accent: "emerald",
-  },
-  {
-    label: "Fail-Closed Safety",
-    value: "100.0%",
-    sub: "26 / 26 safe ungrounded refusals",
-    accent: "emerald",
-  },
-  {
-    label: "Mean Latency",
-    value: "476.6ms",
-    sub: "p50: 474.6ms · p95: 516.1ms · 2.10 QPS",
-    accent: "cyan",
-  },
-]
 
-interface TaskFamilyRow {
-  code: string
-  name: string
-  queries: number
-  r1: string
-  r5: string
-  r10: string
-  r20: string
-  mrr: string
-  latency: string
-  specialMetric: string
-}
 
-const taskFamilyBreakdown: TaskFamilyRow[] = [
-  {
-    code: "KIS-T",
-    name: "Textual Known-Item Search",
-    queries: 400,
-    r1: "68.00%",
-    r5: "76.25%",
-    r10: "78.50%",
-    r20: "82.25%",
-    mrr: "0.7177",
-    latency: "477.4ms",
-    specialMetric: "4-Way Weighted RRF",
-  },
-  {
-    code: "KIS-C",
-    name: "Conversational Search",
-    queries: 200,
-    r1: "94.50%",
-    r5: "94.50%",
-    r10: "94.50%",
-    r20: "94.50%",
-    mrr: "0.9450",
-    latency: "479.7ms",
-    specialMetric: "Ambiguity: 0.61 → 0.22",
-  },
-  {
-    code: "VQA",
-    name: "Grounded Visual QA",
-    queries: 200,
-    r1: "83.33%",
-    r5: "83.33%",
-    r10: "83.33%",
-    r20: "83.33%",
-    mrr: "0.8333",
-    latency: "468.2ms",
-    specialMetric: "100% Fail-Closed Safe",
-  },
-  {
-    code: "AVS",
-    name: "Ad-hoc Video Search",
-    queries: 125,
-    r1: "78.40%",
-    r5: "80.80%",
-    r10: "82.40%",
-    r20: "84.80%",
-    mrr: "0.7914",
-    latency: "475.2ms",
-    specialMetric: "8.6 Distinct Videos / Q",
-  },
-  {
-    code: "KIS-V",
-    name: "Visual Query Search",
-    queries: 75,
-    r1: "88.00%",
-    r5: "96.00%",
-    r10: "96.00%",
-    r20: "97.33%",
-    mrr: "0.9207",
-    latency: "473.9ms",
-    specialMetric: "8-Frame Point Sampling",
-  },
-]
 
 interface SuppTerm {
   term: string
@@ -367,13 +238,13 @@ const suppTerms: SuppTerm[] = [
     term: "WeMM-Embedding-4B",
     category: "Multimodal encoder",
     categoryTone: "cyan",
-    meaning: "Tencent image–text embedding model producing unified 2,048-dimensional vectors for visual and textual retrieval.",
+    meaning: "Tencent multimodal embedder using native output dimensions; optional MRL truncation is limited to dimensions supported by the configured checkpoint.",
   },
   {
     term: "SigLIP",
     category: "Vision–language encoder",
     categoryTone: "cyan",
-    meaning: "Complementary visual encoder whose similarity scores provide a second dense retrieval signal.",
+    meaning: "Optional secondary visual encoder. It is used only when enabled and the indexed collection contains the matching named vectors.",
   },
   {
     term: "PP-OCRv6",
@@ -391,37 +262,37 @@ const suppTerms: SuppTerm[] = [
     term: "Qdrant HNSW",
     category: "Vector index",
     categoryTone: "cyan",
-    meaning: "Approximate nearest-neighbor index for low-latency dense retrieval; HNSW denotes Hierarchical Navigable Small World graphs.",
+    meaning: "Approximate nearest-neighbor index for dense retrieval; this project reports no current HNSW timing or recall measurements.",
   },
   {
-    term: "BM25",
-    category: "Lexical retrieval",
+    term: "Qdrant MatchText",
+    category: "Lexical matching",
     categoryTone: "plum",
-    meaning: "Term-weighted full-text ranking over the enriched text payload, complementing dense similarity.",
+    meaning: "Matches query text against the text_blob payload field. This filter does not compute BM25 scores.",
   },
   {
     term: "RRF",
     category: "Rank fusion",
     categoryTone: "plum",
-    meaning: "Weighted Reciprocal Rank Fusion combining dense, lexical, and secondary-encoder rankings: RRF(d) = Σ w_m / (k + rank_m(d)).",
+    meaning: "Weighted nested Reciprocal Rank Fusion combines ranked retrieval lists. The configured weights default to uniform.",
   },
   {
     term: "CQR / HyDE",
     category: "Query expansion",
     categoryTone: "plum",
-    meaning: "Contextual Query Rewriting preserves conversational constraints; Hypothetical Document Embeddings provide an optional expanded retrieval query.",
+    meaning: "Contextual query rewriting preserves conversational constraints; HyDE can supply a hypothetical-description query for retrieval.",
   },
   {
     term: "MRL",
     category: "Representation technique",
     categoryTone: "cyan",
-    meaning: "Matryoshka Representation Learning supports truncated embedding dimensions for speed–recall trade-offs.",
+    meaning: "Matryoshka Representation Learning supports truncation only to output dimensions advertised by the configured checkpoint.",
   },
   {
     term: "Fail-closed VQA",
     category: "Safety policy",
     categoryTone: "emerald",
-    meaning: "Returns UNKNOWN/N/A when media provenance or visual evidence is unavailable, preventing unsupported answers and avoiding DRES penalties.",
+    meaning: "VQA links candidate answers to resolved media evidence and abstains when evidence or a valid response is unavailable; it does not guarantee factual correctness.",
   },
 ]
 
@@ -436,7 +307,7 @@ const suppMetrics: SuppMetric[] = [
   {
     metric: "Recall@k",
     level: "Query / retrieval",
-    definition: "Fraction of queries whose ground-truth item appears within the first k ranked candidates. Evaluated at Recall@1, Recall@5, Recall@10, and Recall@20.",
+    definition: "Fraction of queries whose ground-truth item appears within the first k ranked candidates. This is a metric definition, not a current result.",
   },
   {
     metric: "Mean Reciprocal Rank (MRR)",
@@ -447,8 +318,8 @@ const suppMetrics: SuppMetric[] = [
   {
     metric: "RRF score",
     level: "Candidate / fusion",
-    definition: "Weighted Reciprocal Rank Fusion score used to combine dense, lexical, and secondary-encoder rankings without scale distortions.",
-    formula: "RRF(d) = Σ w_m / (k + rank_m(d)), k=60",
+    definition: "Weighted reciprocal-rank fusion combines ranked lists; configured weights default to uniform.",
+    formula: "RRF(d) = Σ w_m / (k + rank_m(d))",
   },
   {
     metric: "VQA Exact Match",
@@ -463,7 +334,7 @@ const suppMetrics: SuppMetric[] = [
   {
     metric: "Hallucination Rate",
     level: "Answer / VQA",
-    definition: "Fraction of answers unsupported by valid media evidence or contradicted by the evidence. A fail-closed refusal is 0% hallucination.",
+    definition: "Fraction of answers unsupported by valid media evidence or contradicted by that evidence. No current hallucination-rate result is reported.",
   },
   {
     metric: "Ambiguity Score",
@@ -493,9 +364,9 @@ const suppMetrics: SuppMetric[] = [
     definition: "Recall of an approximate HNSW mode relative to the exact brute-force ranking over the same collection snapshot.",
   },
   {
-    metric: "Overall RAG Score",
+    metric: "Overall Multimodal Retrieval Score",
     level: "Benchmark / corpus",
-    definition: "Aggregate benchmark score (0–100) combining retrieval quality, grounded answer quality, conversational behavior, and operational measurements under the declared evaluation protocol.",
+    definition: "An aggregate score may combine declared benchmark metrics under a specified protocol. No current aggregate score is reported.",
   },
 ]
 function useRevealOnScroll() {
@@ -537,6 +408,24 @@ export function App() {
     },
     [],
   )
+  const handleCopyCitation = useCallback(async () => {
+    const bibtex = `@inproceedings{vo2027aegis,
+  author    = {Vo, Long Minh and Vu, Gia-Hung and Tran, Danh Kim and Nguyen, Huynh-Minh-Khoa and Tran, Kien Vi and Chau, Thi-Tuyet-Trang},
+  title     = {Adaptive, Evidence-Grounded Interactive Search for Video Moment Retrieval},
+  booktitle = {MultiMedia Modeling (MMM 2027)},
+  series    = {Lecture Notes in Computer Science},
+  publisher = {Springer Nature},
+  year      = {2027},
+  note      = {Submitted to Video Browser Showdown (VBS 2027) Extended Demo}
+}`
+    try {
+      await navigator.clipboard.writeText(bibtex)
+    } catch {
+      window.prompt("Copy BibTeX citation:", bibtex)
+    }
+    setCopied(true)
+    window.setTimeout(() => setCopied(false), 2000)
+  }, [])
 
   const handleAbstractPointerEnter = useCallback((event: ReactPointerEvent<HTMLElement>) => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
@@ -562,24 +451,6 @@ export function App() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const handleCopyCitation = useCallback(async () => {
-    const bibtex = `@inproceedings{vo2027aegis,
-  author    = {Vo, Long Minh and Vu, Gia-Hung and Tran, Danh Kim and Nguyen, Huynh-Minh-Khoa and Tran, Kien Vi and Chau, Thi-Tuyet-Trang},
-  title     = {Adaptive, Evidence-Grounded Interactive Search for Video Moment Retrieval},
-  booktitle = {MultiMedia Modeling (MMM 2027)},
-  series    = {Lecture Notes in Computer Science},
-  publisher = {Springer Nature},
-  year      = {2027},
-  note      = {Submitted to Video Browser Showdown (VBS 2027) Extended Demo}
-}`
-    try {
-      await navigator.clipboard.writeText(bibtex)
-    } catch {
-      window.prompt("Copy BibTeX citation:", bibtex)
-    }
-    setCopied(true)
-    window.setTimeout(() => setCopied(false), 2000)
-  }, [])
 
   return (
     <div className="site-frame">
@@ -597,7 +468,7 @@ export function App() {
               <a href="#system-flow" onClick={(event) => handleSectionNavigation(event, "system-flow")}>Pipeline</a>
               <a href="#topology" onClick={(event) => handleSectionNavigation(event, "topology")}>Topology</a>
               <a href="#tasks" onClick={(event) => handleSectionNavigation(event, "tasks")}>Task Modes</a>
-              <a href="#performance" onClick={(event) => handleSectionNavigation(event, "performance")}>Performance</a>
+              <a href="#performance" onClick={(event) => handleSectionNavigation(event, "performance")}>Evaluation</a>
               <a href="#supplementary" onClick={(event) => handleSectionNavigation(event, "supplementary")}>Supplementary</a>
               <a href="#news" onClick={(event) => handleSectionNavigation(event, "news")}>News</a>
             </nav>
@@ -606,7 +477,7 @@ export function App() {
                 Paper PDF <ArrowUpRight className="icon-small" />
               </a>
               <a className="nav-action !bg-plum/10 !text-plum hover:!bg-plum hover:!text-white hidden sm:inline-flex" href={SUPP_PDF} target="_blank" rel="noreferrer">
-                Appendix PDF <Download className="icon-small" />
+                Appendix <Download className="icon-small" />
               </a>
             </div>
           </div>
@@ -632,10 +503,7 @@ export function App() {
                   {authors.map((author, index) => (
                     <span key={author.name} className="author-name">
                       {author.name}
-                      <sup>
-                        {author.affiliations.join(",")}
-                        {author.corresponding && "✉"}
-                      </sup>
+                      <sup>{author.affiliations.join(",")}</sup>
                       {index < authors.length - 1 && <span className="author-separator">·</span>}
                     </span>
                   ))}
@@ -646,7 +514,7 @@ export function App() {
                   ))}
                 </div>
                 <div className="author-note">
-                  ✉ Corresponding author: Long Minh Vo (<a href="mailto:s4215945@rmit.edu.vn" className="text-plum hover:underline font-mono">s4215945@rmit.edu.vn</a>)
+                  Corresponding author: Long Minh Vo (<a href="mailto:s4215945@rmit.edu.vn" className="text-plum hover:underline font-mono">s4215945@rmit.edu.vn</a>)
                 </div>
               </div>
 
@@ -655,21 +523,21 @@ export function App() {
                   <FileText className="icon-small" /> Paper PDF
                 </a>
                 <a className="action-button action-outline !border-plum/30 hover:!bg-plum/10" href={SUPP_PDF} target="_blank" rel="noreferrer">
-                  <Download className="icon-small text-plum" /> Supplementary Material (PDF)
+                  <Download className="icon-small text-plum" /> Supplementary PDF
                 </a>
-                <a className="action-button action-outline" href={VBS_REPO} target="_blank" rel="noreferrer">
-                  <Code2 className="icon-small" /> Code (GitHub)
+                <a className="code-release-notice" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noopener noreferrer" title="README only; source code release pending">
+                  <Code2 className="icon-small" aria-hidden="true" /> GitHub · code pending
                 </a>
               </div>
             </div>
 
           </div>
         </section>
-        {/* Abstract Section - Moved directly below Hero */}
+        {/* Frozen paper abstract */}
         <section id="abstract" className="section-anchor content-section">
           <div className="container content-layout reveal">
             <div className="section-heading side-heading">
-              <span className="eyebrow">EXECUTIVE SUMMARY</span>
+              <span className="eyebrow">PAPER ABSTRACT</span>
               <h2>Abstract</h2>
               <div className="side-rule" />
               <span className="side-caption">AEGIS · TGLTW-RMIT · VBS 2027</span>
@@ -680,24 +548,11 @@ export function App() {
               onPointerEnter={handleAbstractPointerEnter}
             >
               <p className="abstract-lead">
-                Timed interactive video retrieval requires fast candidate exploration under strict penalties for false submissions. In this work, we introduce <strong>AEGIS</strong> (<strong>A</strong>daptive <strong>E</strong>vidence-<strong>G</strong>rounded <strong>I</strong>nteractive <strong>S</strong>earch), an evidence-grounded interactive video retrieval system developed by team <strong>TGLTW-RMIT</strong> for the Video Browser Showdown (VBS 2027).
-              </p>
-              <p>
-                AEGIS combines Tencent WeMM-Embedding-4B with Matryoshka Representation Learning (MRL), Qdrant HNSW indexing, and weighted Reciprocal Rank Fusion, while its contributions include entity-preserving conversational KIS-C, parallel fail-closed grounded VQA, and an intra-video timeline explorer. By unifying dense vector search over Hierarchical Navigable Small World (HNSW) graphs with payload text lexical gates, multi-turn entity tracking, compound <em>n</em>-gram clarification boosting, and conversational negative feedback filtering, the system resolves complex visual ambiguities in real time.
-              </p>
-              <p>
-                Evaluated on the V3C archive across an extensive <strong>1,000-query stress test</strong> spanning all five official task modes (400 KIS-T, 200 KIS-C, 200 VQA, 125 AVS, 75 KIS-V), AEGIS achieves <strong>70.4%</strong> Recall@1 (704/1000), <strong>76.0%</strong> Recall@5, <strong>80.1%</strong> Recall@20, and a Mean Reciprocal Rank (MRR) of <strong>0.729</strong>, with <strong>83.3%</strong> Grounded VQA Exact Match, <strong>100.0%</strong> fail-closed safety rate, and <strong>0.0%</strong> ungrounded hallucination under sub-second mean latency (<strong>476.6ms</strong>).
-              </p>
-              <p className="mt-3 text-sm text-muted">
-                The accompanying public{" "}
-                <a
-                  href="https://aegis.mncuchiinhuttt.dev/"
-                  className="font-bold text-plum hover:underline inline-flex items-center gap-1"
-                >
-                  project page
-                  <ArrowUpRight className="w-3.5 h-3.5 inline" />
-                </a>{" "}
-                provides open-source code, interactive topology, live demonstrations, and supplementary metric specifications.
+                Timed interactive video retrieval requires fast candidate exploration under penalties for false submissions. We introduce AEGIS (Adaptive Evidence-Grounded Interactive Search), an interactive video retrieval system for the Video Browser Showdown (VBS 2027).{" "}
+                AEGIS combines Tencent WeMM-Embedding-4B with Qdrant HNSW indexing and weighted reciprocal rank fusion; it provides entity-aware conversational refinement, parallel VQA with abstention, and an intra-video timeline explorer.{" "}
+                Its workflows retain source/frame identity and link answers to the supplied frame evidence; unavailable evidence or invalid output triggers abstention, not a guarantee of factual correctness.{" "}
+                Archived outputs from a 1,000-query V3C suite provide a limited retrieval record, not end-to-end VQA measurements or official DRES scores. Their indexed-text overlap and unverified encoder/index identity limit interpretation.{" "}
+                The project page (<a href="https://aegis.mncuchiinhuttt.dev/">https://aegis.mncuchiinhuttt.dev/</a>) provides supplementary specifications and will announce the public code release.
               </p>
             </article>
           </div>
@@ -734,8 +589,8 @@ export function App() {
           <div className="container">
             <div className="section-heading centered reveal">
               <span className="eyebrow">PIPELINE EXECUTION</span>
-              <h2>AEGIS Interactive Retrieval Flow</h2>
-              <p>Four-Stage Decoupled Execution Pipeline for Timed Competition</p>
+              <h2>AEGIS Interactive Retrieval Workflow</h2>
+              <p>Four-stage overview of current system components</p>
             </div>
 
             <div className="flow-grid">
@@ -763,8 +618,8 @@ export function App() {
           <div className="container !max-w-[1340px]">
             <div className="section-heading centered reveal">
               <span className="eyebrow">SYSTEM ARCHITECTURE</span>
-              <h2>AEGIS Multimodal Video Retrieval Architecture</h2>
-              <p>Interactive System Topology · Explorable Node-by-Node Pipeline &amp; Dataflow Map</p>
+              <h2>AEGIS Architecture Design Illustration</h2>
+              <p>Archived conceptual topology · not a specification of current pipeline behavior or validated performance</p>
             </div>
 
             <div className="paper-panel reveal overflow-hidden !p-3 sm:!p-6 topology-panel-motion">
@@ -774,7 +629,7 @@ export function App() {
                   <h3 className="text-base sm:text-lg font-black text-ink">Interactive Topology Canvas</h3>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="status-chip">Live Interactive Map</span>
+                  <span className="status-chip">Archived Design Illustration</span>
                   <a
                     href="/aegis-architecture.html"
                     target="_blank"
@@ -789,7 +644,7 @@ export function App() {
               <div className="w-full h-[420px] sm:h-[450px] lg:h-[470px] rounded-2xl overflow-hidden border border-plum/15 shadow-inner bg-[#fff8fb]">
                 <iframe
                   src="/aegis-architecture.html?theme=light&embed=1"
-                  title="AEGIS Multimodal Retrieval Architecture Interactive Topology"
+                  title="Archived AEGIS architecture design illustration; not a current pipeline specification"
                   className="w-full h-full border-0"
                   loading="lazy"
                 />
@@ -840,12 +695,6 @@ export function App() {
                         ))}
                       </div>
 
-                      {task.highlight && (
-                        <div className="task-v2-highlight">
-                          <Check className="w-3.5 h-3.5" />
-                          <span>{task.highlight}</span>
-                        </div>
-                      )}
                     </div>
                   </article>
                 )
@@ -856,33 +705,33 @@ export function App() {
             <div className="demo-showcase-panel reveal">
               <div className="panel-heading-row mb-4">
                 <div>
-                  <span className="eyebrow text-xs text-plum font-mono">QUALITATIVE DEMONSTRATIONS</span>
-                  <h3 className="text-base sm:text-lg font-black text-ink">AEGIS Interactive Operator Console</h3>
+                  <span className="eyebrow text-xs text-plum font-mono">INTERFACE / DESIGN ILLUSTRATION</span>
+                  <h3 className="text-base sm:text-lg font-black text-ink">AEGIS Operator Console Concept</h3>
                 </div>
-                <span className="status-chip">Live Benchmark Telemetry</span>
+                <span className="status-chip">Illustration only · no live benchmark telemetry</span>
               </div>
               <div className="demo-image-frame">
                 <img
                   src="/figures/system_ui_demo.png"
-                  alt="AEGIS Interactive Operator Console and qualitative task demonstrations across KIS-T, KIS-C, VQA, AVS, and KIS-V"
+                  alt="Illustrative operator-console design for VBS task workflows; not evidence of production evaluation results"
                   loading="lazy"
                 />
               </div>
               <div className="demo-caption-grid">
                 <div className="demo-caption-pill">
-                  <strong>KIS-T:</strong> Top-1 hit on <code>00001.mp4</code> via 4-way weighted RRF fusion over WeMM-4B and BM25 payload text.
+                  <strong>KIS-T:</strong> Illustrative textual-retrieval workflow; no current task score is reported.
                 </div>
                 <div className="demo-caption-pill">
-                  <strong>KIS-C:</strong> Multi-turn dialogue disambiguation locating <code>00003.mp4</code> with ambiguity drop (0.61 → 0.22).
+                  <strong>KIS-C:</strong> Illustrative follow-up conversational-search workflow.
                 </div>
                 <div className="demo-caption-pill">
-                  <strong>KIS-V:</strong> Visual Query matching <code>00008.mp4</code> at 98.4% visual similarity via 8-frame representative sampling.
+                  <strong>KIS-V:</strong> Illustrative query-by-example workflow.
                 </div>
                 <div className="demo-caption-pill">
-                  <strong>VQA:</strong> Grounded visual QA answering &ldquo;Helicopter&rdquo; on <code>00004.mp4</code> with 100% fail-closed safety.
+                  <strong>VQA:</strong> Illustrative evidence-linked answer-or-abstain workflow; evidence linkage is not a correctness guarantee.
                 </div>
                 <div className="demo-caption-pill">
-                  <strong>AVS:</strong> Diverse candidate gallery delivering 8.6 distinct videos per query with soft duplicate-video guards.
+                  <strong>AVS:</strong> Illustrative candidate-browsing workflow; no current AVS score is reported.
                 </div>
               </div>
             </div>
@@ -892,310 +741,22 @@ export function App() {
         <section id="performance" className="section-anchor content-section performance-section">
           <div className="container">
             <div className="section-heading centered reveal">
-              <span className="eyebrow">EMPIRICAL ABLATION RESULTS</span>
-              <h2>Experimental Performance &amp; Ablation Studies</h2>
-              <p>Evaluated on the V3C Dataset via 1,000-Query Corpus Stress Test &amp; Automated Zero-Temperature LLM Judge Protocol</p>
+              <span className="eyebrow">CURRENT EVALUATION STATUS</span>
+              <h2>Production results are not yet measured</h2>
+              <p>The current pipeline has no verified production scores. GPU evaluation is blocked by unavailable server access and the absence of a real annotation manifest.</p>
             </div>
 
-            {/* KPI Summary Grid */}
-            <div className="kpi-grid reveal">
-              {kpiStats.map((kpi) => (
-                <div key={kpi.label} className={`kpi-card ${kpi.accent ? `kpi-accent-${kpi.accent}` : ""}`}>
-                  <div className="kpi-label">
-                    <span>{kpi.label}</span>
-                    <Sparkles className="w-3 h-3 opacity-60" />
-                  </div>
-                  <div className="kpi-value">{kpi.value}</div>
-                  <div className="kpi-sub">{kpi.sub}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Table 1: Ablation Study 1 & 2 */}
-            <div className="paper-panel performance-panel reveal mb-8 performance-panel-motion">
-              <div className="panel-heading-row">
-                <div>
-                  <span className="eyebrow text-xs text-plum font-mono">TABLE 1</span>
-                  <h3 className="text-base sm:text-lg font-black text-ink">Ablation Study 1 &amp; 2: Retrieval Fusion &amp; Multi-Turn KIS-C Dynamics</h3>
-                </div>
-                <span className="status-chip">V3C 1,000-Query Benchmark</span>
-              </div>
-              <div className="table-scroll">
-                <table className="paper-table">
-                  <thead>
-                    <tr>
-                      <th>Pipeline Configuration / Stage</th>
-                      <th>Recall@1</th>
-                      <th>Recall@5</th>
-                      <th>MRR</th>
-                      <th>Latency</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="ablation-section-row">
-                      <td colSpan={5}>
-                        Panel A: Multimodal Retrieval Fusion (1,000-Query Corpus Test)
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">(M1) Dense Only (WeMM-4B)</td>
-                      <td className="cell-num">38.5%</td>
-                      <td className="cell-num">52.1%</td>
-                      <td className="cell-num">0.448</td>
-                      <td className="cell-num">0.038s</td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">(M2) Dense + Sparse BM25 Payload</td>
-                      <td className="cell-num">46.2%</td>
-                      <td className="cell-num">58.4%</td>
-                      <td className="cell-num">0.518</td>
-                      <td className="cell-num">0.052s</td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">(M3) Dense + BM25 + SigLIP Secondary</td>
-                      <td className="cell-num">53.8%</td>
-                      <td className="cell-num">64.0%</td>
-                      <td className="cell-num">0.589</td>
-                      <td className="cell-num">0.076s</td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">(M4) + 4-Way Weighted RRF Fusion</td>
-                      <td className="cell-num">60.5%</td>
-                      <td className="cell-num">69.2%</td>
-                      <td className="cell-num">0.645</td>
-                      <td className="cell-num">0.084s</td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">(M5) + Temporal Coherence &amp; Diversify</td>
-                      <td className="cell-num">66.2%</td>
-                      <td className="cell-num">73.1%</td>
-                      <td className="cell-num">0.694</td>
-                      <td className="cell-num">0.092s</td>
-                    </tr>
-                    <tr className="ablation-highlight-row">
-                      <td className="font-black text-plum">(M6) + Evidence-Grounded Fusion (Full Engine)</td>
-                      <td className="cell-winner">70.4%</td>
-                      <td className="cell-winner">76.0%</td>
-                      <td className="cell-winner">0.729</td>
-                      <td className="cell-winner font-bold">0.477s</td>
-                    </tr>
-
-                    <tr className="ablation-section-row">
-                      <td colSpan={5}>
-                        Panel B: Conversational KIS-C Multi-Turn Progression (200 Scenarios)
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">(C1) Turn 1: Initial Vague Query</td>
-                      <td className="cell-num">0.0%</td>
-                      <td className="cell-num">38.0% (R@3)</td>
-                      <td className="cell-num">0.265</td>
-                      <td className="cell-num">0.088s (Amb 0.61)</td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">(C2) Turn 2: Naive History Concat</td>
-                      <td className="cell-num">28.5%</td>
-                      <td className="cell-num">54.0% (R@3)</td>
-                      <td className="cell-num">0.412</td>
-                      <td className="cell-num">0.092s (Amb 0.58)</td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">(C3) Turn 2: + Entity-Preserving CQR</td>
-                      <td className="cell-num">58.0%</td>
-                      <td className="cell-num">74.0% (R@3)</td>
-                      <td className="cell-num">0.655</td>
-                      <td className="cell-num">0.110s (Amb 0.52)</td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">(C4) Turn 2: + Compound N-gram Boost</td>
-                      <td className="cell-num">82.5%</td>
-                      <td className="cell-num">89.0% (R@3)</td>
-                      <td className="cell-num">0.860</td>
-                      <td className="cell-num">0.115s (Amb 0.41)</td>
-                    </tr>
-                    <tr className="ablation-highlight-row">
-                      <td className="font-black text-plum">(C5) Turn 3: + Negative Filter &amp; Feedback</td>
-                      <td className="cell-winner">94.5%</td>
-                      <td className="cell-winner">94.5% (R@3)</td>
-                      <td className="cell-winner">0.945</td>
-                      <td className="cell-winner font-bold">0.120s (Amb 0.22)</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Table 2: Ablation Study 3, 4 & 5 */}
-            <div className="paper-panel performance-panel reveal mb-8 performance-panel-motion">
-              <div className="panel-heading-row">
-                <div>
-                  <span className="eyebrow text-xs text-plum font-mono">TABLE 2</span>
-                  <h3 className="text-base sm:text-lg font-black text-ink">Ablation Study 3, 4 &amp; 5: VQA Grounding, Concurrency, and Precision Ladder</h3>
-                </div>
-                <span className="status-chip">Grounded Telemetry</span>
-              </div>
-              <div className="table-scroll">
-                <table className="paper-table">
-                  <thead>
-                    <tr>
-                      <th>Ablation Dimension &amp; Setting</th>
-                      <th>Accuracy / Recall</th>
-                      <th>Faithfulness</th>
-                      <th>Hallucination</th>
-                      <th>Latency / Speedup</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="ablation-section-row">
-                      <td colSpan={5}>
-                        Panel C: VQA Grounding &amp; Fail-Closed Safety (200 Queries)
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">Ungrounded Whole-Frame VLM</td>
-                      <td className="cell-num">Exact Match: 52.0%</td>
-                      <td className="cell-num">58.0%</td>
-                      <td className="font-bold text-rose-600">42.0% (Hazardous)</td>
-                      <td className="cell-num">1.42s</td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">Locate-and-Crop (YOLOE-26 + VLM)</td>
-                      <td className="cell-num">Exact Match: 76.5%</td>
-                      <td className="cell-num">82.0%</td>
-                      <td className="cell-num">12.0%</td>
-                      <td className="cell-num">1.55s</td>
-                    </tr>
-                    <tr className="ablation-highlight-row-emerald">
-                      <td className="font-black text-[#1b6351]">AEGIS Fail-Closed Grounded Contract</td>
-                      <td className="cell-winner-emerald">Exact Match: 83.3%</td>
-                      <td className="cell-winner-emerald">92.5%</td>
-                      <td className="cell-winner-emerald">0.0% (Zero Error)</td>
-                      <td className="cell-winner-emerald">0.468s (100% Safe)</td>
-                    </tr>
-
-                    <tr className="ablation-section-row">
-                      <td colSpan={5}>
-                        Panel D: Multi-threaded VLM Concurrency Scaling (Top-10 Scoring)
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">Sequential Execution (N=1 worker)</td>
-                      <td className="cell-num">Throughput: 0.67 QPS</td>
-                      <td className="cell-num">&mdash;</td>
-                      <td className="cell-num">&mdash;</td>
-                      <td className="cell-num">14.85s (1.0&times;)</td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">Parallel Execution (N=4 workers)</td>
-                      <td className="cell-num">Throughput: 2.51 QPS</td>
-                      <td className="cell-num">&mdash;</td>
-                      <td className="cell-num">&mdash;</td>
-                      <td className="cell-num">3.98s (3.73&times;)</td>
-                    </tr>
-                    <tr className="ablation-highlight-row">
-                      <td className="font-black text-plum">Parallel Execution (N=8 workers)</td>
-                      <td className="cell-winner">Throughput: 5.41 QPS</td>
-                      <td className="cell-num">&mdash;</td>
-                      <td className="cell-num">&mdash;</td>
-                      <td className="cell-winner">1.85s (8.03&times; speedup)</td>
-                    </tr>
-
-                    <tr className="ablation-section-row">
-                      <td colSpan={5}>
-                        Panel E: Budgeted Precision Ladder (HNSW Effort Scaling)
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">Fast Mode (HNSW ef=64)</td>
-                      <td className="cell-num">Recall: 97.8%</td>
-                      <td className="cell-num">Instant Screen</td>
-                      <td className="cell-num">&mdash;</td>
-                      <td className="font-bold text-[#1b6351]">12.4ms</td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">Standard Mode (HNSW ef=256)</td>
-                      <td className="cell-num">Recall: 99.4%</td>
-                      <td className="cell-num">Balanced Live</td>
-                      <td className="cell-num">&mdash;</td>
-                      <td className="cell-num">24.5ms</td>
-                    </tr>
-                    <tr>
-                      <td className="font-bold text-ink">Deep Mode (HNSW ef=512)</td>
-                      <td className="cell-num">Recall: 99.9%</td>
-                      <td className="cell-num">High Ambiguity</td>
-                      <td className="cell-num">&mdash;</td>
-                      <td className="cell-num">48.6ms</td>
-                    </tr>
-                    <tr className="ablation-highlight-row">
-                      <td className="font-black text-plum">Exact Brute-Force Scan</td>
-                      <td className="cell-winner">Recall: 100.0%</td>
-                      <td className="cell-num">Deterministic</td>
-                      <td className="cell-num">&mdash;</td>
-                      <td className="cell-num font-bold">118.5ms</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Table 3: Official 5-Task Family Breakdown */}
             <div className="paper-panel performance-panel reveal">
               <div className="panel-heading-row">
                 <div>
-                  <span className="eyebrow text-xs text-plum font-mono">TABLE 3</span>
-                  <h3 className="text-base sm:text-lg font-black text-ink">Official 5-Task Family Breakdown (1,000 Empirical Queries on V3C)</h3>
+                  <span className="eyebrow text-xs text-plum font-mono">EVALUATION TOOLING</span>
+                  <h3 className="text-base sm:text-lg font-black text-ink">Model-free production VQA replay and evaluator</h3>
                 </div>
-                <span className="status-chip">Corpus Benchmark</span>
+                <span className="status-chip">Implemented · results not generated</span>
               </div>
-              <div className="table-scroll">
-                <table className="paper-table">
-                  <thead>
-                    <tr>
-                      <th>Task Family</th>
-                      <th>Mode</th>
-                      <th>Queries</th>
-                      <th>R@1 (%)</th>
-                      <th>R@5 (%)</th>
-                      <th>R@10 (%)</th>
-                      <th>R@20 (%)</th>
-                      <th>MRR</th>
-                      <th>Mean Latency</th>
-                      <th>Key System Invariant</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {taskFamilyBreakdown.map((row) => (
-                      <tr key={row.code}>
-                        <td className="font-bold text-ink">
-                          <span className="supp-term-code mr-2">{row.code}</span>
-                        </td>
-                        <td>{row.name}</td>
-                        <td className="cell-num">{row.queries}</td>
-                        <td className="cell-winner">{row.r1}</td>
-                        <td className="cell-num">{row.r5}</td>
-                        <td className="cell-num">{row.r10}</td>
-                        <td className="cell-num">{row.r20}</td>
-                        <td className="cell-num font-bold">{row.mrr}</td>
-                        <td className="cell-num">{row.latency}</td>
-                        <td><span className="supp-category-pill">{row.specialMetric}</span></td>
-                      </tr>
-                    ))}
-                    <tr className="ablation-highlight-row">
-                      <td className="font-black text-plum" colSpan={2}>
-                        Comprehensive Benchmark (Overall)
-                      </td>
-                      <td className="cell-num font-black">1,000</td>
-                      <td className="cell-winner">70.40%</td>
-                      <td className="cell-winner">76.00%</td>
-                      <td className="cell-winner">77.60%</td>
-                      <td className="cell-winner">80.10%</td>
-                      <td className="cell-winner font-black">0.7289</td>
-                      <td className="cell-winner font-bold">476.6ms</td>
-                      <td><span className="supp-category-pill supp-category-pill-plum">Overall RAG Score: 77.5 / 100</span></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              <p className="supp-desc-text">
+                The replay/evaluator scores saved production VQA outcomes against a real annotation manifest without running a model. It has not produced empirical results. Current VQA accuracy, safety rate, hallucination rate, latency, ablations, baseline comparisons, and HNSW timings are unmeasured; no superiority or correctness guarantee is claimed.
+              </p>
             </div>
           </div>
         </section>
@@ -1205,36 +766,33 @@ export function App() {
           <div className="container">
             <div className="section-heading centered reveal">
               <span className="eyebrow">SUPPLEMENTARY MATERIAL</span>
-              <h2>Technical Appendix &amp; Evaluation Metrics</h2>
-              <p>Formal Mathematical Definitions, System Components, and Operational Invariants (Omitted from 8-Page Conference Submission)</p>
+              <h2>Supporting Material &amp; Evaluation Notes</h2>
+              <p>Terminology and metric definitions accompany the synchronized paper and supplementary PDFs. Current production quality and latency remain unmeasured.</p>
             </div>
 
-            {/* Official Appendix Download Callout Banner */}
+            {/* Supporting PDF callout */}
             <div className="download-banner reveal">
               <div className="download-banner-header">
                 <div className="download-banner-title">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="status-chip">Official Appendix Document</span>
-                    <span className="text-xs font-mono text-plum-deep font-semibold">MMM 2027 / VBS 2027</span>
+                    <span className="status-chip">Paper and supplement synchronized</span>
                   </div>
                   <h3>
                     <FileCheck2 className="w-5 h-5 text-plum" />
-                    AEGIS Supplementary Material: Terminology, Techniques, and Evaluation Metrics
+                    AEGIS Supporting Material
                   </h3>
                   <p>
-                    Due to the strict 8-page limit for Video Browser Showdown Extended Demo submissions, this comprehensive technical appendix provides formal mathematical definitions for all 12 evaluation metrics, implementation details for all 10 core retrieval components, and operational reporting protocols.
+                    The PDF copies match the current camera-ready sources. This page does not report current production metrics, ablation outcomes, baseline comparisons, or system timings.
                   </p>
                 </div>
                 <div className="download-banner-actions">
                   <a className="btn-download-primary" href={SUPP_PDF} target="_blank" rel="noreferrer">
                     <Download className="w-4 h-4" />
-                    <span>Download Appendix (PDF)</span>
-                    <span className="text-xs opacity-75 font-normal">~222 KB</span>
+                    <span>Supplementary PDF</span>
                   </a>
                   <a className="btn-download-secondary" href={PAPER_PDF} target="_blank" rel="noreferrer">
                     <FileText className="w-4 h-4" />
-                    <span>Main Paper (PDF)</span>
-                    <span className="text-xs opacity-75 font-normal">8 Pages &middot; ~1.7 MB</span>
+                    <span>Paper PDF</span>
                   </a>
                 </div>
               </div>
@@ -1244,28 +802,28 @@ export function App() {
                 <div className="invariant-card">
                   <div className="invariant-card-title">
                     <Cpu className="w-3.5 h-3.5 text-plum" />
-                    <span>Provenance Preservation</span>
+                    <span>Evidence linkage</span>
                   </div>
                   <p className="invariant-card-desc">
-                    Every retrieved hit strictly retains canonical video ID, shot ID, native frame index, and timestamp across all fusion stages without loss.
+                    VQA records the resolved candidate media reference and evidence availability for inspection; this linkage does not establish answer correctness.
                   </p>
                 </div>
                 <div className="invariant-card">
                   <div className="invariant-card-title">
                     <Check className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Deterministic LLM Judge</span>
+                    <span>Model-free replay evaluator</span>
                   </div>
                   <p className="invariant-card-desc">
-                    Automated evaluations use Gemini 3.8 Flash (High) at temperature T=0 over identical query snapshots to guarantee reproducible scoring.
+                    Saved production VQA outcomes can be replayed against a real annotation manifest without running a model; no results have been generated yet.
                   </p>
                 </div>
                 <div className="invariant-card">
                   <div className="invariant-card-title">
                     <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
-                    <span>Fail-Closed Safety Policy</span>
+                    <span>Abstention policy</span>
                   </div>
                   <p className="invariant-card-desc">
-                    Missing media provenance yields explicit zero-confidence refusal (UNKNOWN/N/A), completely preventing competition penalty deductions.
+                    Missing media or an invalid response defaults to UNKNOWN; abstention is a safeguard, not a guarantee that answered questions are correct.
                   </p>
                 </div>
               </div>
@@ -1275,10 +833,10 @@ export function App() {
             <div className="paper-panel performance-panel reveal mb-8">
               <div className="panel-heading-row">
                 <div>
-                  <span className="eyebrow text-xs text-plum font-mono">SUPPLEMENTARY TABLE S1</span>
-                  <h3 className="text-base sm:text-lg font-black text-ink">Terminology and Techniques Used in AEGIS</h3>
+                  <span className="eyebrow text-xs text-plum font-mono">TERMINOLOGY REFERENCE</span>
+                  <h3 className="text-base sm:text-lg font-black text-ink">Terminology and Implementation Notes</h3>
                 </div>
-                <span className="status-chip">System Reference</span>
+                <span className="status-chip">Method reference</span>
               </div>
               <div className="table-scroll">
                 <table className="paper-table">
@@ -1312,10 +870,10 @@ export function App() {
             <div className="paper-panel performance-panel reveal">
               <div className="panel-heading-row">
                 <div>
-                  <span className="eyebrow text-xs text-plum font-mono">SUPPLEMENTARY TABLE S2</span>
-                  <h3 className="text-base sm:text-lg font-black text-ink">Evaluation Metrics Reference &amp; Formal Definitions</h3>
+                  <span className="eyebrow text-xs text-plum font-mono">METRIC DEFINITIONS</span>
+                  <h3 className="text-base sm:text-lg font-black text-ink">Evaluation Metrics Reference</h3>
                 </div>
-                <span className="status-chip">Formal Metric Standards</span>
+                <span className="status-chip">Definitions only · no current results</span>
               </div>
               <div className="table-scroll">
                 <table className="paper-table">
@@ -1383,20 +941,21 @@ export function App() {
           </div>
         </section>
 
-        <section id="citation" className="section-anchor content-section citation-section">
-          <div className="container">
-            <div className="paper-panel citation-panel reveal">
-              <div className="panel-heading-row">
-                <div className="heading-with-icon">
-                  <BookOpen className="icon-medium" />
-                  <h2>BibTeX Citation</h2>
+        {SHOW_BIBTEX_CITATION && (
+          <section id="citation" className="section-anchor content-section citation-section">
+            <div className="container">
+              <div className="paper-panel citation-panel reveal">
+                <div className="panel-heading-row">
+                  <div className="heading-with-icon">
+                    <BookOpen className="icon-medium" />
+                    <h2>BibTeX Citation</h2>
+                  </div>
+                  <button className="copy-button" onClick={handleCopyCitation} type="button">
+                    {copied ? <CheckCheck className="icon-small" /> : <Copy className="icon-small" />}
+                    {copied ? "Copied to Clipboard!" : "Copy BibTeX"}
+                  </button>
                 </div>
-                <button className="copy-button" onClick={handleCopyCitation} type="button">
-                  {copied ? <CheckCheck className="icon-small" /> : <Copy className="icon-small" />}
-                  {copied ? "Copied to Clipboard!" : "Copy BibTeX"}
-                </button>
-              </div>
-              <pre>{`@inproceedings{vo2027aegis,
+                <pre>{`@inproceedings{vo2027aegis,
   author    = {Vo, Long Minh and Vu, Gia-Hung and Tran, Danh Kim and Nguyen, Huynh-Minh-Khoa and Tran, Kien Vi and Chau, Thi-Tuyet-Trang},
   title     = {Adaptive, Evidence-Grounded Interactive Search for Video Moment Retrieval},
   booktitle = {MultiMedia Modeling (MMM 2027)},
@@ -1405,9 +964,10 @@ export function App() {
   year      = {2027},
   note      = {Submitted to Video Browser Showdown (VBS 2027) Extended Demo}
 }`}</pre>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
       </main>
 
       <footer className="footer">
@@ -1420,7 +980,7 @@ export function App() {
             <a href="https://aegis.mncuchiinhuttt.dev/" target="_blank" rel="noreferrer">Project Page <ExternalLink className="icon-small" /></a>
             <a href={PAPER_PDF} target="_blank" rel="noreferrer">Paper PDF <ArrowUpRight className="icon-small" /></a>
             <a href={SUPP_PDF} target="_blank" rel="noreferrer">Appendix PDF <Download className="icon-small" /></a>
-            <a href={VBS_REPO} target="_blank" rel="noreferrer">GitHub <ArrowUpRight className="icon-small" /></a>
+            <a className="code-release-label" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noopener noreferrer" title="README only; source code release pending">GitHub · code pending <ExternalLink className="icon-small" aria-hidden="true" /></a>
             <a href="https://videobrowsershowdown.org/" target="_blank" rel="noreferrer">VBS <ExternalLink className="icon-small" /></a>
           </div>
         </div>

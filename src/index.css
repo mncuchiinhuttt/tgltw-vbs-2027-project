@@ -423,6 +423,34 @@ main {
   background: rgba(255, 255, 255, 0.58);
 }
 
+.code-release-notice {
+  display: inline-flex;
+  min-height: 44px;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px dashed var(--line);
+  border-radius: 999px;
+  padding: 8px 17px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.58);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.code-release-notice:hover,
+.code-release-notice:focus-visible {
+  border-color: var(--plum);
+  color: var(--plum);
+}
+
+.code-release-notice:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 3px;
+}
+
 .action-cyan {
   border-color: rgba(35, 126, 138, 0.16);
   color: #237e8a;
@@ -1756,6 +1784,13 @@ tbody tr:hover td {
   color: var(--plum);
 }
 
+.footer-links .code-release-label {
+  margin-top: 0;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(18px);
@@ -1911,11 +1946,11 @@ tbody tr:hover td {
   }
 
   main {
-    padding-top: 92px;
+    padding-top: 136px;
   }
 
   .section-anchor {
-    scroll-margin-top: 105px;
+    scroll-margin-top: 136px;
   }
 
   .hero {

@@ -1,0 +1,38 @@
+{
+  "record_kind": "historical_diagnostic_subset_not_a_new_experiment",
+  "source": {
+    "archive": "tgltw-vbs-2027-latest-source.zip",
+    "member": "evaluation/vbs_rag_benchmark_1000_results.json",
+    "recorded_timestamp": "2026-09-14 17:27:06 UTC",
+    "original_file_sha256": "503899b78cacde5a82808562393c2cb1ab8d3896afa8ad366b4adc8863f5350c",
+    "original_git_blob_sha1": "58bb97e8d90f4d6525947bae99e17c6d107355df"
+  },
+  "total_queries": 1000,
+  "task_rule_retrieval": {
+    "recall_unit": "percent",
+    "recall_1": 70.4,
+    "recall_5": 76.0,
+    "recall_10": 77.6,
+    "recall_20": 80.1,
+    "mrr": 0.7289
+  },
+  "video_only_retrieval": {
+    "recall_unit": "percent",
+    "recall_1": 70.4,
+    "recall_5": 76.3,
+    "mrr": 0.7299
+  },
+  "legacy_query_timer_ms": {
+    "mean": 476.6,
+    "p50": 474.6,
+    "p95": 516.1
+  },
+  "limitations": [
+    "The legacy generator extends a 200-query base; some added queries and conversational replies reuse indexed captions or text_blob. Query independence is not established.",
+    "Task-rule ranks mix video, point-ID and loose temporal criteria. They are not pooled temporal retrieval accuracy or official DRES scores.",
+    "The historical runner does not invoke a VLM. The timer excludes real VLM generation, UI interaction and DRES submission.",
+    "Per-query ranks, independent labels and effective encoder, checkpoint, index and hardware identities were not preserved in the aggregate.",
+    "VQA, safety, hallucination, conversational proxy and composite fields from the original file are intentionally excluded because they do not establish the corresponding end-to-end capabilities.",
+    "These archived values do not evaluate the maintained native WeMM pipeline or its corrected VQA replay."
+  ]
+}

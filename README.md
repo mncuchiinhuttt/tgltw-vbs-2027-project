@@ -7,11 +7,17 @@ This repository is a React + Vite + TypeScript app styled with Tailwind CSS. The
 ## Links
 
 
-- Project page source: <https://github.com/mncuchiinhuttt/tgltw-vbs-2027-project>
-- System repository: <https://github.com/mncuchiinhuttt/tgltw-vbs-2027>
-- Paper source: <https://github.com/mncuchiinhuttt/tgltw-vbs-2027/blob/main/paper/main.tex>
+- Public project page: <https://aegis.mncuchiinhuttt.dev/>
+- System repository: <https://github.com/mncuchiinhuttt/aegis-vbs-2027> — README only; source code release pending.
+- Paper and supplementary PDFs: synchronized with the current camera-ready sources.
 - Video Browser Showdown: <https://videobrowsershowdown.org/>
 - VBS 2027 call for papers: <https://videobrowsershowdown.org/call-for-papers/>
+
+## Evaluation and release status
+
+Current production evaluation results have not been measured. GPU evaluation is blocked by unavailable server access and the lack of a real annotation manifest. The model-free production VQA replay/evaluator has been implemented but has not generated results.
+
+The archived retrieval diagnostic records Recall@1 70.4%, Recall@5 76.0%, and MRR 0.7289. These values describe an earlier diagnostic only and do not validate the current pipeline. Provenance and limitations are recorded in the [archived diagnostic data](./public/artifacts/archived-retrieval-diagnostics.json). The project page labels interface material as illustration rather than live benchmark telemetry.
 
 ## Local development
 
@@ -24,25 +30,13 @@ Use `npm run build` to create the production bundle in `dist/`, or `npm run prev
 
 ## Deployment
 
-### Vercel
-
-Import this repository and let Vercel detect Vite. If it asks for settings, use:
+The production project is connected to Vercel's GitHub integration. Pushing `main` triggers a production deployment:
 
 - Build command: `npm run build`
 - Output directory: `dist`
+- Public domain: <https://aegis.mncuchiinhuttt.dev/>
 
-### Cloudflare Pages
-
-Create a Pages project from this repository and use:
-
-- Build command: `npm run build`
-- Build output directory: `dist`
-
-The generated `dist/` folder is also suitable for Cloudflare Workers Static Assets if the project is later wrapped with Wrangler.
-
-### GitHub Pages
-
-Build with `npm run build` and publish the generated `dist/` directory through a Pages workflow. Vercel or Cloudflare Pages is the simpler default because both can build the Vite app directly from `main`.
+The generated `dist/` folder is also suitable for other static hosts; no system-pipeline runtime is deployed by this project.
 
 ## Project structure
 
@@ -51,4 +45,6 @@ Build with `npm run build` and publish the generated `dist/` directory through a
 - [`src/components/iso-icon.tsx`](./src/components/iso-icon.tsx): reusable isometric icon treatment.
 - [`src/index.css`](./src/index.css): Tailwind theme tokens plus the small amount of CSS needed for the isometric planes and reveal motion.
 
-The paper currently uses the GitHub repository URL as the stable project-page URL. Once a Vercel or Cloudflare URL is deployed, replace that canonical URL in the paper with the deployed address.
+Use <https://aegis.mncuchiinhuttt.dev/> as the public project entry point. The hero and footer link to the public README-only repository and explicitly mark the source code as pending. Do not substitute a private source-repository URL or describe the pipeline as already released.
+
+Paper and supplementary PDF links serve the synchronized camera-ready artifacts. Archived diagnostic data includes its provenance and limitations; it is not a current production benchmark.
