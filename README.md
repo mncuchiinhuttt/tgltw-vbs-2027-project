@@ -30,13 +30,16 @@ Use `npm run build` to create the production bundle in `dist/`, or `npm run prev
 
 ## Deployment
 
-The production project is connected to Vercel's GitHub integration. Pushing `main` triggers a production deployment:
+The project is configured for Cloudflare Workers (Workers Static Assets) via `wrangler.json`:
+
+```bash
+npm run deploy
+```
 
 - Build command: `npm run build`
-- Output directory: `dist`
-- Public domain: <https://aegis.mncuchiinhuttt.dev/>
-
-The generated `dist/` folder is also suitable for other static hosts; no system-pipeline runtime is deployed by this project.
+- Assets directory: `./dist`
+- Worker URL: <https://aegis-vbs-2027.vominhlongbentre.workers.dev>
+- Custom domain target: `aegis.mncuchiinhuttt.dev` (requires deleting the external Vercel CNAME/A records in Cloudflare DNS first before attaching via Workers Custom Domains).
 
 ## Project structure
 

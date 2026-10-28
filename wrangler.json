@@ -1,0 +1,9 @@
+{
+  "name": "aegis-vbs-2027",
+  "compatibility_date": "2026-10-28",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "single-page-application"
+  }
+}
