@@ -58,6 +58,15 @@ interface NewsItem {
 
 const newsList: NewsItem[] = [
   {
+    date: "19 OCT 2026",
+    tag: "ACCEPTED",
+    tagColor: "emerald",
+    title: "Paper accepted to MMM 2027 (Springer LNCS) / VBS 2027",
+    description: "Our paper 'AEGIS: Adaptive, Evidence-Grounded Interactive Search for Video Moment Retrieval' has been accepted for publication in Springer LNCS and demonstration at the Video Browser Showdown 2027 in Siem Reap, Cambodia.",
+    link: "#",
+    linkLabel: "Camera-ready / arXiv pending",
+  },
+  {
     date: "21 SEP 2026",
     tag: "SUBMITTED",
     tagColor: "blue",
