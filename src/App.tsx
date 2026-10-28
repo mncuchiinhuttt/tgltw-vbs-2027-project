@@ -22,9 +22,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
-const PAPER_PDF = "/paper.pdf"
 const SHOW_BIBTEX_CITATION = false
-const SUPP_PDF = "/supplementary_metrics.pdf"
 const SOURCE_REPOSITORY_URL = "https://github.com/mncuchiinhuttt/aegis-vbs-2027"
 
 interface Author {
@@ -65,8 +63,8 @@ const newsList: NewsItem[] = [
     tagColor: "blue",
     title: "Paper submitted to MMM 2027 (Springer LNCS) as VBS 2027 Extended Demo",
     description: "Our paper 'Adaptive, Evidence-Grounded Interactive Search for Video Moment Retrieval' has been submitted for peer review and live competition demonstration in Siem Reap, Cambodia.",
-    link: PAPER_PDF,
-    linkLabel: "Camera-ready paper PDF",
+    link: "#",
+    linkLabel: "Camera-ready / arXiv pending",
   },
   {
     date: "14 SEP 2026",
@@ -473,12 +471,9 @@ export function App() {
               <a href="#news" onClick={(event) => handleSectionNavigation(event, "news")}>News</a>
             </nav>
             <div className="flex items-center gap-2">
-              <a className="nav-action" href={PAPER_PDF} target="_blank" rel="noreferrer">
-                Paper PDF <ArrowUpRight className="icon-small" />
-              </a>
-              <a className="nav-action !bg-plum/10 !text-plum hover:!bg-plum hover:!text-white hidden sm:inline-flex" href={SUPP_PDF} target="_blank" rel="noreferrer">
-                Appendix <Download className="icon-small" />
-              </a>
+              <span className="nav-action !cursor-default !opacity-70">
+                Paper · pending
+              </span>
             </div>
           </div>
         </div>
@@ -519,12 +514,9 @@ export function App() {
               </div>
 
               <div className="hero-actions">
-                <a className="action-button action-plum" href={PAPER_PDF} target="_blank" rel="noreferrer">
-                  <FileText className="icon-small" /> Paper PDF
-                </a>
-                <a className="action-button action-outline !border-plum/30 hover:!bg-plum/10" href={SUPP_PDF} target="_blank" rel="noreferrer">
-                  <Download className="icon-small text-plum" /> Supplementary PDF
-                </a>
+                <span className="action-button action-outline !border-plum/30 !cursor-default !opacity-75">
+                  <FileText className="icon-small text-plum" /> Paper · preprint pending
+                </span>
                 <a className="code-release-notice" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noopener noreferrer" title="README only; source code release pending">
                   <Code2 className="icon-small" aria-hidden="true" /> GitHub · code pending
                 </a>
@@ -767,7 +759,7 @@ export function App() {
             <div className="section-heading centered reveal">
               <span className="eyebrow">SUPPLEMENTARY MATERIAL</span>
               <h2>Supporting Material &amp; Evaluation Notes</h2>
-              <p>Terminology and metric definitions accompany the synchronized paper and supplementary PDFs. Current production quality and latency remain unmeasured.</p>
+              <p>Terminology and metric definitions are documented for reference. Camera-ready paper and supplementary PDFs will be released alongside the official arXiv / conference publication.</p>
             </div>
 
             {/* Supporting PDF callout */}
@@ -775,25 +767,23 @@ export function App() {
               <div className="download-banner-header">
                 <div className="download-banner-title">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="status-chip">Paper and supplement synchronized</span>
+                    <span className="status-chip">Preprint / publication pending</span>
                   </div>
                   <h3>
                     <FileCheck2 className="w-5 h-5 text-plum" />
                     AEGIS Supporting Material
                   </h3>
-                  <p>
-                    The PDF copies match the current camera-ready sources. This page does not report current production metrics, ablation outcomes, baseline comparisons, or system timings.
-                  </p>
+                    The camera-ready paper and supplementary documentation will be linked here once published (e.g. arXiv / conference proceedings).
                 </div>
                 <div className="download-banner-actions">
-                  <a className="btn-download-primary" href={SUPP_PDF} target="_blank" rel="noreferrer">
+                  <span className="btn-download-primary !cursor-default !opacity-75">
                     <Download className="w-4 h-4" />
-                    <span>Supplementary PDF</span>
-                  </a>
-                  <a className="btn-download-secondary" href={PAPER_PDF} target="_blank" rel="noreferrer">
+                    <span>Supplementary PDF · pending</span>
+                  </span>
+                  <span className="btn-download-secondary !cursor-default !opacity-75">
                     <FileText className="w-4 h-4" />
-                    <span>Paper PDF</span>
-                  </a>
+                    <span>Paper PDF · pending</span>
+                  </span>
                 </div>
               </div>
 
@@ -978,8 +968,7 @@ export function App() {
           </div>
           <div className="footer-links">
             <a href="https://aegis.mncuchiinhuttt.dev/" target="_blank" rel="noreferrer">Project Page <ExternalLink className="icon-small" /></a>
-            <a href={PAPER_PDF} target="_blank" rel="noreferrer">Paper PDF <ArrowUpRight className="icon-small" /></a>
-            <a href={SUPP_PDF} target="_blank" rel="noreferrer">Appendix PDF <Download className="icon-small" /></a>
+            <span className="code-release-label !text-muted">Paper PDF · pending</span>
             <a className="code-release-label" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noopener noreferrer" title="README only; source code release pending">GitHub · code pending <ExternalLink className="icon-small" aria-hidden="true" /></a>
             <a href="https://videobrowsershowdown.org/" target="_blank" rel="noreferrer">VBS <ExternalLink className="icon-small" /></a>
           </div>

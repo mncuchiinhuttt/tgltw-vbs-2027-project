@@ -9,7 +9,7 @@ This repository is a React + Vite + TypeScript app styled with Tailwind CSS. The
 
 - Public project page: <https://aegis.mncuchiinhuttt.dev/>
 - System repository: <https://github.com/mncuchiinhuttt/aegis-vbs-2027> — README only; source code release pending.
-- Paper and supplementary PDFs: synchronized with the current camera-ready sources.
+- Paper and supplementary PDFs: will be released upon arXiv / camera-ready publication.
 - Video Browser Showdown: <https://videobrowsershowdown.org/>
 - VBS 2027 call for papers: <https://videobrowsershowdown.org/call-for-papers/>
 
@@ -50,4 +50,4 @@ npm run deploy
 
 Use <https://aegis.mncuchiinhuttt.dev/> as the public project entry point. The hero and footer link to the public README-only repository and explicitly mark the source code as pending. Do not substitute a private source-repository URL or describe the pipeline as already released.
 
-Paper and supplementary PDF links serve the synchronized camera-ready artifacts. Archived diagnostic data includes its provenance and limitations; it is not a current production benchmark.
+Paper and supplementary PDF links are pending publication. Archived diagnostic data includes its provenance and limitations; it is not a current production benchmark.
