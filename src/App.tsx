@@ -33,7 +33,7 @@ interface Author {
 }
 
 const authors: Author[] = [
-  { name: "Long Minh Vo", affiliations: ["1", "2"], corresponding: true, email: "s4215945@rmit.edu.vn" },
+  { name: "Long Minh Vo", affiliations: ["1", "2"], corresponding: true, email: "long.vo.minh@rmit.edu.vn" },
   { name: "Gia-Hung Vu", affiliations: ["1"] },
   { name: "Danh Kim Tran", affiliations: ["1"] },
   { name: "Huynh-Minh-Khoa Nguyen", affiliations: ["1"] },
@@ -518,7 +518,7 @@ export function App() {
                   ))}
                 </div>
                 <div className="author-note">
-                  Corresponding author: Long Minh Vo (<a href="mailto:s4215945@rmit.edu.vn" className="text-plum hover:underline font-mono">s4215945@rmit.edu.vn</a>)
+                  Corresponding author: Long Minh Vo (<a href="mailto:long.vo.minh@rmit.edu.vn" className="text-plum hover:underline font-mono">long.vo.minh@rmit.edu.vn</a>)
                 </div>
               </div>
 
