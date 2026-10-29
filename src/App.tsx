@@ -5,7 +5,6 @@ import {
   BookOpen,
   Check,
   CheckCheck,
-  Code2,
   Copy,
   Cpu,
   Database,
@@ -21,6 +20,7 @@ import {
   Sliders,
   type LucideIcon,
 } from "lucide-react"
+import { GitHubIcon } from "./components/github-icon"
 
 const SHOW_BIBTEX_CITATION = false
 const SOURCE_REPOSITORY_URL = "https://github.com/mncuchiinhuttt/aegis-vbs-2027"
@@ -526,8 +526,8 @@ export function App() {
                 <span className="action-button action-outline !border-plum/30 !cursor-default !opacity-75">
                   <FileText className="icon-small text-plum" /> Paper · preprint pending
                 </span>
-                <a className="code-release-notice" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noopener noreferrer" title="README only; source code release pending">
-                  <Code2 className="icon-small" aria-hidden="true" /> GitHub · code pending
+                <a className="code-release-notice" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noopener noreferrer" title="View AEGIS source code on GitHub">
+                  <GitHubIcon className="icon-small" /> GitHub
                 </a>
               </div>
             </div>
@@ -978,7 +978,7 @@ export function App() {
           <div className="footer-links">
             <a href="https://aegis.mncuchiinhuttt.dev/" target="_blank" rel="noreferrer">Project Page <ExternalLink className="icon-small" /></a>
             <span className="code-release-label !text-muted">Paper PDF · pending</span>
-            <a className="code-release-label" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noopener noreferrer" title="README only; source code release pending">GitHub · code pending <ExternalLink className="icon-small" aria-hidden="true" /></a>
+            <a className="code-release-label" href={SOURCE_REPOSITORY_URL} target="_blank" rel="noopener noreferrer" title="View AEGIS source code on GitHub"><GitHubIcon className="icon-small" /> GitHub</a>
             <a href="https://videobrowsershowdown.org/" target="_blank" rel="noreferrer">VBS <ExternalLink className="icon-small" /></a>
           </div>
         </div>

@@ -8,7 +8,7 @@ This repository is a React + Vite + TypeScript app styled with Tailwind CSS. The
 
 
 - Public project page: <https://aegis.mncuchiinhuttt.dev/>
-- System repository: <https://github.com/mncuchiinhuttt/aegis-vbs-2027> — README only; source code release pending.
+- System source code: <https://github.com/mncuchiinhuttt/aegis-vbs-2027> — public AEGIS source release.
 - Paper and supplementary PDFs: will be released upon arXiv / camera-ready publication.
 - Video Browser Showdown: <https://videobrowsershowdown.org/>
 - VBS 2027 call for papers: <https://videobrowsershowdown.org/call-for-papers/>
@@ -48,6 +48,6 @@ npm run deploy
 - [`src/components/iso-icon.tsx`](./src/components/iso-icon.tsx): reusable isometric icon treatment.
 - [`src/index.css`](./src/index.css): Tailwind theme tokens plus the small amount of CSS needed for the isometric planes and reveal motion.
 
-Use <https://aegis.mncuchiinhuttt.dev/> as the public project entry point. The hero and footer link to the public README-only repository and explicitly mark the source code as pending. Do not substitute a private source-repository URL or describe the pipeline as already released.
+Use <https://aegis.mncuchiinhuttt.dev/> as the public project entry point. The hero and footer link to the published AEGIS source repository with a GitHub logomark. Paper and supplementary PDFs remain pending publication; releasing the source does not publish those files.
 
 Paper and supplementary PDF links are pending publication. Archived diagnostic data includes its provenance and limitations; it is not a current production benchmark.
